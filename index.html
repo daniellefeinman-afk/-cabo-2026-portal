@@ -26,6 +26,26 @@
       --radius: 8px;
       color-scheme: light;
     }
+    :root[data-theme="dark"] {
+      --ink: #e7eef8;
+      --muted: #a9b8ca;
+      --line: #26384d;
+      --paper: #111d2b;
+      --wash: #08111d;
+      --navy: #dbeafe;
+      --teal: #5eead4;
+      --blue: #93c5fd;
+      --coral: #fb8f73;
+      --gold: #f8d16f;
+      --green: #86efac;
+      --red: #fca5a5;
+      --sky: #0f2a44;
+      --mint: #123526;
+      --amber: #3f2f12;
+      --rose: #3b171a;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+      color-scheme: dark;
+    }
 
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
@@ -39,6 +59,11 @@
       font-size: 14px;
       line-height: 1.45;
     }
+    :root[data-theme="dark"] body {
+      background:
+        linear-gradient(180deg, rgba(8, 17, 29, 0.92), rgba(8, 17, 29, 1) 430px),
+        url("./cabo-operations-backdrop.png") center top / cover fixed;
+    }
 
     a { color: var(--blue); font-weight: 800; text-decoration: none; }
     a:hover { text-decoration: underline; }
@@ -47,7 +72,7 @@
       min-height: 38px;
       border: 1px solid var(--line);
       border-radius: 999px;
-      background: #fff;
+      background: var(--paper);
       color: var(--navy);
       cursor: pointer;
       font-weight: 850;
@@ -61,7 +86,7 @@
       min-width: 0;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: #fff;
+      background: var(--paper);
       color: var(--ink);
       padding: 7px 8px;
     }
@@ -88,7 +113,7 @@
       top: 0;
       z-index: 30;
       display: grid;
-      grid-template-columns: auto 1fr auto;
+      grid-template-columns: auto minmax(360px, 1fr) auto;
       gap: 14px;
       align-items: center;
       padding: 12px 18px;
@@ -145,11 +170,88 @@
       color: #fff;
       font-size: 12px;
     }
+    .headerTools {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .headerTools button {
+      min-height: 34px;
+      padding: 5px 10px;
+      border-color: rgba(255, 255, 255, 0.22);
+      background: rgba(255, 255, 255, 0.1);
+      color: #fff;
+    }
+    .dayChip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 34px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      background: #fff;
+      color: #102a43;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+    .dayChip span {
+      display: grid;
+      min-width: 26px;
+      height: 26px;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--gold);
+      color: #102a43;
+    }
+    .linkRail {
+      grid-column: 1 / -1;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      min-width: 0;
+    }
 
     .wrap {
       width: min(1540px, 100%);
       margin: 0 auto;
       padding: 18px;
+    }
+    .metricsStrip {
+      position: sticky;
+      top: 74px;
+      z-index: 22;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(160px, 1fr));
+      gap: 10px;
+      margin: 0 auto 16px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 12px 28px rgba(16, 42, 67, 0.1);
+      backdrop-filter: blur(14px);
+    }
+    :root[data-theme="dark"] .metricsStrip,
+    :root[data-theme="dark"] .pageHeader,
+    :root[data-theme="dark"] .statusPanel {
+      background: rgba(17, 29, 43, 0.92);
+    }
+    .metricTile {
+      display: grid;
+      gap: 1px;
+      min-height: 64px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .metricTile strong {
+      color: var(--navy);
+      font-size: 22px;
+      line-height: 1;
     }
     .heroBand {
       display: grid;
@@ -186,7 +288,7 @@
     }
     .pageHeader {
       position: sticky;
-      top: 66px;
+      top: 152px;
       z-index: 20;
       display: flex;
       justify-content: space-between;
@@ -222,6 +324,15 @@
       background: var(--paper);
       padding: 14px;
       box-shadow: 0 10px 26px rgba(16, 42, 67, 0.07);
+    }
+    :root[data-theme="dark"] .card,
+    :root[data-theme="dark"] table,
+    :root[data-theme="dark"] details,
+    :root[data-theme="dark"] .seat,
+    :root[data-theme="dark"] .weatherDay,
+    :root[data-theme="dark"] .miniPanel,
+    :root[data-theme="dark"] .tag {
+      background: var(--paper);
     }
     .card.compact { padding: 10px; }
     .softBlue { background: var(--sky); }
@@ -261,7 +372,7 @@
     .pill.bad { background: #fecaca; color: #991b1b; }
     .pill.info { background: #bfdbfe; color: #1e3a8a; }
     .pill.neutral { background: #e5e7eb; color: #374151; }
-    .tag { border: 1px solid var(--line); background: #fff; color: var(--navy); cursor: pointer; }
+    .tag { border: 1px solid var(--line); background: var(--paper); color: var(--navy); cursor: pointer; }
     .tag.active, .tabs button.active, .filters button.active { background: var(--navy); color: #fff; border-color: var(--navy); }
     table {
       width: 100%;
@@ -270,7 +381,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       overflow: hidden;
-      background: #fff;
+      background: var(--paper);
     }
     th, td {
       border-bottom: 1px solid var(--line);
@@ -291,7 +402,7 @@
     details {
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: #fff;
+      background: var(--paper);
       overflow: hidden;
     }
     details + details { margin-top: 10px; }
@@ -355,12 +466,91 @@
       gap: 8px;
       margin: 10px 0;
     }
+    .stickySubTabs {
+      position: sticky;
+      top: 236px;
+      z-index: 18;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.94);
+      box-shadow: 0 12px 24px rgba(16, 42, 67, 0.08);
+      backdrop-filter: blur(14px);
+    }
+    :root[data-theme="dark"] .stickySubTabs {
+      background: rgba(17, 29, 43, 0.94);
+    }
+    .stickySubTabs .spacer { flex: 1; }
+    .pageIntro {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .featurePanel {
+      min-height: 220px;
+      padding: 18px;
+      border-radius: var(--radius);
+      background:
+        linear-gradient(120deg, rgba(16, 42, 67, 0.9), rgba(15, 118, 110, 0.76)),
+        url("./cabo-operations-backdrop.png") center / cover;
+      color: #fff;
+      box-shadow: var(--shadow);
+    }
+    .featurePanel h2,
+    .featurePanel h3,
+    .featurePanel .kpi,
+    .featurePanel .small {
+      color: #fff;
+    }
+    .quickGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .quickCard {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .linkGrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .linkGrid a {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      color: var(--navy);
+    }
+    .shoppingPanel > summary {
+      align-items: center;
+      background: linear-gradient(90deg, rgba(254, 243, 199, 0.82), rgba(255, 255, 255, 0.72));
+    }
+    :root[data-theme="dark"] .shoppingPanel > summary {
+      background: linear-gradient(90deg, rgba(63, 47, 18, 0.95), rgba(17, 29, 43, 0.9));
+    }
 
     @media (max-width: 1120px) {
       .appTop { grid-template-columns: 1fr; }
-      .topNav, .hotlinks { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; }
+      .linkRail { flex-direction: column; align-items: flex-start; }
+      .topNav, .hotlinks, .headerTools { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; width: 100%; }
+      .metricsStrip { top: 176px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .heroBand { grid-template-columns: 1fr; }
-      .pageHeader { top: 0; flex-direction: column; align-items: flex-start; }
+      .pageHeader { top: 322px; flex-direction: column; align-items: flex-start; }
+      .stickySubTabs { top: 420px; }
+      .pageIntro { grid-template-columns: 1fr; }
       .grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
       .span12, .span8, .span7, .span6, .span5, .span4, .span3 { grid-column: span 6; }
       .restaurant { grid-template-columns: 1fr; }
@@ -368,6 +558,11 @@
     }
     @media (max-width: 680px) {
       .wrap { padding: 12px; }
+      .appTop { position: static; }
+      .metricsStrip { position: static; grid-template-columns: 1fr; }
+      .pageHeader { position: static; }
+      .stickySubTabs { position: sticky; top: 0; }
+      .linkGrid, .quickGrid { grid-template-columns: 1fr; }
       .heroCopy { min-height: 220px; padding: 18px; }
       .statusPanel { padding: 12px; }
       .grid { grid-template-columns: 1fr; }
@@ -401,16 +596,40 @@
       <button data-nav="dog" onclick="showPage('dog', this)">Dog Boarding</button>
       <button data-nav="sources" onclick="showPage('sources', this)">Sources</button>
     </nav>
-    <div class="hotlinks" aria-label="Hotlinks">
-      <a target="_blank" rel="noreferrer" href="https://www.southwest.com/air/manage-reservation/">Southwest</a>
-      <a target="_blank" rel="noreferrer" href="https://www.flyaustin.com/">AUS</a>
-      <a target="_blank" rel="noreferrer" href="https://www.aeropuertosgap.com.mx/en/los-cabos-3.html">SJD</a>
-      <a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Garza Blanca</a>
-      <a target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=Austin-Bergstrom+International+Airport">Home to AUS</a>
+    <div class="headerTools" aria-label="Portal tools">
+      <span class="dayChip"><span id="daysLeftChip">0</span>days to go</span>
+      <button onclick="saveAll()">Save</button>
+      <button onclick="exportData()">Export</button>
+      <button onclick="document.getElementById('importFile').click()">Import</button>
+      <input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)">
+      <button onclick="window.print()">Print</button>
+      <button id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">Dark</button>
+    </div>
+    <div class="linkRail">
+      <div class="hotlinks" aria-label="In-site links">
+        <a href="#packing" onclick="showPage('packing')">Packing Hub</a>
+        <a href="#resort" onclick="showPage('resort')">Resort Hub</a>
+        <a href="#sources" onclick="showPage('sources')">Live Links</a>
+      </div>
+      <div class="hotlinks" aria-label="Live links">
+        <a target="_blank" rel="noreferrer" href="https://www.southwest.com/air/manage-reservation/">Southwest</a>
+        <a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Garza Blanca</a>
+        <a target="_blank" rel="noreferrer" href="https://www.aeropuertosgap.com.mx/en/los-cabos-3.html">SJD</a>
+        <a target="_blank" rel="noreferrer" href="https://www.flyaustin.com/">AUS</a>
+        <a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Firehouse</a>
+      </div>
     </div>
   </header>
 
   <main class="wrap">
+    <section class="metricsStrip" aria-label="Trip metrics">
+      <div class="metricTile"><span class="kpi">Readiness</span><strong id="readinessMetric">0%</strong><span class="small">Weighted operations score</span></div>
+      <div class="metricTile"><span class="kpi">Packed</span><strong id="packingMetric">0%</strong><span class="small" id="packedMiniMetric">0/0 complete</span></div>
+      <div class="metricTile"><span class="kpi">Critical</span><strong id="criticalMetric">0</strong><span class="small">Needs attention</span></div>
+      <div class="metricTile"><span class="kpi">Shopping</span><strong id="shoppingMetric">0</strong><span class="small">Open procurement rows</span></div>
+      <div class="metricTile"><span class="kpi">Transfers</span><strong id="transferMetric">Pending</strong><span class="small">Andrea details needed</span></div>
+    </section>
+
     <section class="heroBand" aria-labelledby="portalTitle">
       <div class="heroCopy">
         <p class="kpi">Garza Blanca Los Cabos | Jun 27-Jul 3 | 6 nights / 7 days</p>
@@ -440,13 +659,6 @@
       <div>
         <h2 id="pageTitle">Dashboard</h2>
         <p id="pageSubtitle">Operating snapshot and priority board.</p>
-      </div>
-      <div class="actions">
-        <button onclick="saveAll()">Save</button>
-        <button onclick="exportData()">Export</button>
-        <button onclick="document.getElementById('importFile').click()">Import</button>
-        <input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)">
-        <button onclick="window.print()">Print</button>
       </div>
     </div>
 
@@ -526,6 +738,21 @@
     </section>
 
     <section id="packing" class="page">
+      <div class="stickySubTabs" id="packingTabs">
+        <button class="active" onclick="filterPacking('all', this)">All</button>
+        <button onclick="filterPacking('kids', this)">Kids</button>
+        <button onclick="filterPacking('adults', this)">Adults</button>
+        <button onclick="filterPacking('pool', this)">Pool + Beach</button>
+        <button onclick="filterPacking('toiletries', this)">Toiletries</button>
+        <button onclick="filterPacking('travel', this)">Travel Day</button>
+        <button onclick="filterPacking('room', this)">Room Setup</button>
+        <button onclick="filterPacking('shopping', this)">Shopping</button>
+        <button onclick="showOutstandingOnly(this)">Outstanding</button>
+        <span class="spacer"></span>
+        <button onclick="expandPacking()">Expand all</button>
+        <button onclick="collapsePacking()">Collapse all</button>
+      </div>
+
       <div class="grid">
         <div class="card softBlue span3"><div class="kpi">Overall Packed</div><div class="big" id="overallPacked">0%</div><div class="bar"><div id="overallPackedBar"></div></div></div>
         <div class="card span3"><div class="kpi">Packed Items</div><div class="big" id="packedItems">0/0</div></div>
@@ -533,19 +760,12 @@
         <div class="card span3"><div class="kpi">Shopping Open</div><div class="big" id="shoppingOpen">0</div></div>
 
         <div class="card span12">
-          <h3>Packing Controls</h3>
-          <div class="filters" id="packingFilters">
-            <button class="active" onclick="filterPacking('all', this)">All</button>
-            <button onclick="filterPacking('kids', this)">Kids</button>
-            <button onclick="filterPacking('adults', this)">Adults</button>
-            <button onclick="filterPacking('pool', this)">Pool + Beach</button>
-            <button onclick="filterPacking('toiletries', this)">Toiletries</button>
-            <button onclick="filterPacking('travel', this)">Travel Day</button>
-            <button onclick="filterPacking('room', this)">Room Setup</button>
-            <button onclick="filterPacking('shopping', this)">Shopping</button>
-            <button onclick="showOutstandingOnly(this)">Outstanding</button>
-            <button onclick="expandPacking()">Expand</button>
-            <button onclick="collapsePacking()">Collapse</button>
+          <h3>Packing Navigation</h3>
+          <p class="small">Use the sticky filter bar above to keep the packing lanes reachable while scrolling. Shopping is collapsed by default because it is procurement, not suitcase flow.</p>
+          <div class="linkGrid">
+            <a href="#peopleWrap">People <span>clothes + shoes</span></a>
+            <a href="#sharedWrap">Shared <span>pool, travel, room</span></a>
+            <a href="#shoppingWrap">Shopping <span>open purchases</span></a>
           </div>
         </div>
 
@@ -557,30 +777,66 @@
           <h3>Shared Packing Sections</h3>
           <div id="sharedSections"></div>
         </div>
-        <div class="card span12" id="shoppingWrap">
-          <h3>Shopping + Procurement</h3>
-          <table><tr><th>Item</th><th>Qty</th><th>Owner</th><th>Category</th><th>Ordered</th><th>Delivered</th><th>Packed</th><th>Notes</th><th></th></tr><tbody id="shopRows"></tbody></table>
-          <div class="sectionTools"><button onclick="addShopItem()">Add shopping item</button></div>
-        </div>
+        <details class="card span12 shoppingPanel" id="shoppingWrap">
+          <summary>Shopping + Procurement <span class="pill warn" id="shoppingPanelStatus">Open items</span></summary>
+          <div class="inner">
+            <p class="small">Procurement is editable here, but keeping it collapsed makes the actual packing lanes easier to work through.</p>
+            <table><tr><th>Item</th><th>Qty</th><th>Owner</th><th>Category</th><th>Ordered</th><th>Delivered</th><th>Packed</th><th>Notes</th><th></th></tr><tbody id="shopRows"></tbody></table>
+            <div class="sectionTools"><button onclick="addShopItem()">Add shopping item</button></div>
+          </div>
+        </details>
       </div>
     </section>
 
     <section id="resort" class="page">
+      <div class="stickySubTabs">
+        <a class="tag active" href="#resort-overview">Overview</a>
+        <a class="tag" href="#resort-dining">Dining</a>
+        <a class="tag" href="#resort-kids">Kids Club</a>
+        <a class="tag" href="#resort-pools">Pools</a>
+        <a class="tag" href="#resort-weather">Weather</a>
+        <a class="tag" href="#resort-notes">Onsite Notes</a>
+        <span class="spacer"></span>
+        <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Official Site</a>
+        <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Dining</a>
+      </div>
+
+      <div class="pageIntro" id="resort-overview">
+        <div class="featurePanel">
+          <p class="kpi">Garza Blanca Resort &amp; Spa Los Cabos</p>
+          <h2>Resort command center</h2>
+          <p>Use this page for arrival decisions, kid logistics, dining defaults, pool operations, room setup, weather, and the questions that need a human answer at check-in.</p>
+          <div class="sectionTools">
+            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Resort</a>
+            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/all-inclusive">All-inclusive</a>
+            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/kids-club">Kids Club</a>
+            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Activities</a>
+          </div>
+        </div>
+        <div class="quickGrid">
+          <div class="quickCard"><div class="kpi">Address</div><strong>Km. 17.5 Tourist Corridor</strong><div class="small">Cabo San Lucas, BCS 23405</div></div>
+          <div class="quickCard"><div class="kpi">Phone</div><strong>+52 624 105 4460</strong><div class="small">Toll Free: 1 800 931 6023</div></div>
+          <div class="quickCard"><div class="kpi">Kids Club</div><strong>9 AM-5 PM</strong><div class="small">Ages 4-12; confirm schedule onsite</div></div>
+          <div class="quickCard"><div class="kpi">Operating Style</div><strong>Pool-first</strong><div class="small">Beach is available; kid default is pool logistics</div></div>
+        </div>
+      </div>
+
       <div class="grid">
         <div class="card span12">
-          <h3>Resort Intelligence Center</h3>
+          <h3>Arrival Intelligence</h3>
           <div class="grid">
-            <div class="card compact span4"><h4>Contact + Address</h4><p>Garza Blanca Resort &amp; Spa Los Cabos<br>Carretera Transpeninsular Km. 17.5, Corredor Turistico Los Cabos, Cabo San Lucas, BCS 23405<br>Phone: +52 624 105 4460<br>Toll Free: 1 800 931 6023</p></div>
-            <div class="card compact span4"><h4>All-Inclusive Notes</h4><p>Dining, drinks, 24-hour room service, activities, Wi-Fi, concierge, taxes, and fees are included. Premium dishes, bottles, select events, and spa services are add-ons or discounted.</p></div>
-            <div class="card compact span4"><h4>Ask at Arrival</h4><ul><li>Kids Club schedule and signup</li><li>Dining reservation expectations</li><li>Room numbers, proximity, and keys</li><li>Best kid pool, towel process, cabana rules</li></ul></div>
+            <div class="card compact span4"><h4>All-Inclusive Signal</h4><p>Use the plan for meals, drinks, room service, Wi-Fi, concierge, taxes, and standard resort activities. Premium dishes, bottles, some events, and spa services can still be add-ons.</p></div>
+            <div class="card compact span4"><h4>Check-in Questions</h4><ul><li>Room numbers, proximity, and keys</li><li>Kids Club current schedule and signup process</li><li>Dining reservation rules and kids menu</li><li>Towels, wristbands, cabanas, and best kid pool</li></ul></div>
+            <div class="card compact span4"><h4>Low-friction Defaults</h4><ul><li>Breakfast: Blanca Blue</li><li>Pool lunch: Food Truck / pool food</li><li>Tired kids: 24-hour room service</li><li>First full day: pool base, then decide</li></ul></div>
           </div>
         </div>
 
-        <div class="card span7">
+        <div class="card span7" id="resort-dining">
           <h3>Food Dashboard</h3>
           <div id="foodDash"></div>
+          <p class="sourceNote">Dining rows combine the trip planning file with official resort dining links. Verify hours and reservation rules onsite because resort schedules can shift.</p>
         </div>
-        <div class="card span5">
+        <div class="card span5" id="resort-kids">
           <h3>Kids Club + Activities</h3>
           <table>
             <tr><th>Feature</th><th>Details</th></tr>
@@ -590,9 +846,10 @@
             <tr><td>Activities</td><td>Crafts, games, pool time, beach soccer, scavenger hunts, workshops, movies, video games, reading club.</td></tr>
             <tr><td>Under 4 / outside hours</td><td>Paid babysitting listed by resort; confirm onsite.</td></tr>
           </table>
+          <div class="sectionTools"><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/kids-club">Open Kids Club</a><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Open Activities</a></div>
         </div>
 
-        <div class="card span6">
+        <div class="card span6" id="resort-pools">
           <h3>Pools + Beach</h3>
           <table>
             <tr><th>Area</th><th>What to know</th></tr>
@@ -610,7 +867,7 @@
           <table><tr><th>Item</th><th>Qty</th><th>Packed</th></tr><tbody id="poolToteRows"></tbody></table>
         </div>
 
-        <div class="card span12">
+        <div class="card span12" id="resort-rooms">
           <h3>Rooms + Setup</h3>
           <table>
             <tr><th>Travelers</th><th>Working room type</th><th>Setup notes</th></tr>
@@ -621,7 +878,7 @@
           <p class="sourceNote">Known: no connecting rooms. Resort will try proximity. Room numbers and proximity are check-in issues.</p>
         </div>
 
-        <div class="card span12">
+        <div class="card span12" id="resort-weather">
           <h3>Weather Command Center</h3>
           <div class="grid">
             <div class="card compact span3"><span class="pill ok">Trip Signal</span><h4>Pool-first weather</h4><div class="small">Warm, dry, sun-heavy pattern.</div></div>
@@ -633,7 +890,7 @@
           <p class="sourceNote">Forecast values are from the Cabo resort hub snapshot dated June 18, 2026. Refresh again inside the final week before travel and on beach days.</p>
         </div>
 
-        <div class="card span12">
+        <div class="card span12" id="resort-notes">
           <h3>Onsite Planning Notes</h3>
           <table><tr><th>Day</th><th>Plan / Note</th><th>Owner</th><th>Done</th><th></th></tr><tbody id="onsiteRows"></tbody></table>
           <div class="sectionTools"><button onclick="addOnsiteNote()">Add onsite note</button></div>
@@ -666,7 +923,10 @@
             <tr><td>Activities</td><td>Garza Blanca resort activities</td><td><a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Open</a></td></tr>
             <tr><td>All-Inclusive</td><td>Garza Blanca all-inclusive plan</td><td><a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/all-inclusive">Open</a></td></tr>
             <tr><td>Dining</td><td>Garza Blanca dining</td><td><a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Open</a></td></tr>
-            <tr><td>Dog</td><td>Firehouse Pet Resort</td><td><a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Open</a></td></tr>
+            <tr><td>Dog</td><td>Firehouse Pet Resort - Round Rock</td><td><a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Open</a></td></tr>
+            <tr><td>Dog</td><td>Camp Bow Wow Austin North</td><td><a target="_blank" rel="noreferrer" href="https://www.campbowwow.com/austin/services-pricing/dog-boarding/">Open</a></td></tr>
+            <tr><td>Dog</td><td>PetSuites Round Rock</td><td><a target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/services/boarding">Open</a></td></tr>
+            <tr><td>Ground</td><td>Home to AUS route</td><td><a target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=Austin-Bergstrom+International+Airport">Open</a></td></tr>
           </table>
           <p class="sourceNote">Weather is date-sensitive. Refresh forecast data again closer to travel, especially for beach and transfer-day decisions.</p>
         </div>
@@ -677,6 +937,7 @@
   <script>
     const STORAGE_KEY = "caboPortal_v3";
     const OLD_KEYS = ["caboPortal_v2", "caboPortal_v1"];
+    const THEME_KEY = "caboPortal_theme";
     let activeTripDay = "outbound";
     let activeFlight = "outbound";
 
@@ -760,6 +1021,7 @@
     ];
 
     let data = loadData();
+    applyTheme(localStorage.getItem(THEME_KEY) || "light");
 
     function loadData() {
       const raw = localStorage.getItem(STORAGE_KEY) || OLD_KEYS.map(k => localStorage.getItem(k)).find(Boolean);
@@ -782,6 +1044,17 @@
     }
     function sectionName(key) {
       return { pool: "Pool + Beach", toiletries: "Toiletries", travel: "Travel Day", room: "Room Setup" }[key] || key;
+    }
+    function applyTheme(theme) {
+      const next = theme === "dark" ? "dark" : "light";
+      document.documentElement.dataset.theme = next;
+      const button = document.getElementById("themeToggle");
+      if (button) button.textContent = next === "dark" ? "Light" : "Dark";
+    }
+    function toggleTheme() {
+      const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+      localStorage.setItem(THEME_KEY, next);
+      applyTheme(next);
     }
     function saveAll() {
       collectAll();
@@ -846,6 +1119,7 @@
       const now = new Date();
       const days = Math.max(0, Math.ceil((target - now) / 86400000));
       daysLeft.textContent = days;
+      daysLeftChip.textContent = days;
     }
 
     function setTripDay(which, button) {
@@ -949,13 +1223,18 @@
       packedItems.textContent = `${packingDone}/${packingTotal}`;
       outstandingItems.textContent = packingTotal - packingDone;
       shoppingOpen.textContent = shoppingOpenRows.length;
+      shoppingMetric.textContent = shoppingOpenRows.length;
       orderedCount.textContent = ordered;
       maybeCount.textContent = shoppingDecisionRows.length;
       packMini.textContent = packedPct + "%";
       packStatus.textContent = packedPct + "% packed";
+      packingMetric.textContent = packedPct + "%";
+      packedMiniMetric.textContent = `${packingDone}/${packingTotal} complete`;
       shopMini.textContent = `${shoppingCritical} essential / ${shoppingDecisionRows.length} decisions`;
       shopStatusText.textContent = shoppingCritical ? `${shoppingCritical} Essential` : shoppingDecisionRows.length ? `${shoppingDecisionRows.length} Decisions` : "Clear";
       shopStatusText.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
+      shoppingPanelStatus.textContent = shoppingOpenRows.length ? `${shoppingOpenRows.length} open` : "Clear";
+      shoppingPanelStatus.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
 
       const scores = [
         ["Flights", 100, "Booked"],
@@ -968,19 +1247,23 @@
       ];
       const readiness = Math.round(scores.reduce((sum, item) => sum + item[1], 0) / scores.length);
       readinessPct.textContent = readiness + "%";
+      readinessMetric.textContent = readiness + "%";
       readinessBar.style.width = readiness + "%";
-      criticalCount.textContent = [
+      const criticalItems = [
         !data.checks.order_dog,
         !data.checks.order_transfer,
         !data.checks.order_docs,
         shoppingCritical > 0
       ].filter(Boolean).length;
+      criticalCount.textContent = criticalItems;
+      criticalMetric.textContent = criticalItems;
+      transferMetric.textContent = data.checks.order_transfer ? "Confirmed" : "Pending";
       readinessRows.innerHTML = scores.map(s => `<div class="miniPanel span3"><div class="kpi">${s[0]}</div><div class="big" style="font-size:22px">${s[1]}%</div><div class="small">${s[2]}</div></div>`).join("");
     }
 
     function filterPacking(type, button) {
       collectAll();
-      document.querySelectorAll("#packingFilters button").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("#packingTabs button").forEach(b => b.classList.remove("active"));
       if (button) button.classList.add("active");
       document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
       shoppingWrap.classList.remove("hidden");
@@ -999,15 +1282,17 @@
         return;
       }
       if (type === "shopping") {
+        shoppingWrap.open = true;
         document.querySelectorAll(".person-card, .shared-card").forEach(c => c.classList.add("hidden"));
       }
     }
     function showOutstandingOnly(button) {
       collectAll();
-      document.querySelectorAll("#packingFilters button").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("#packingTabs button").forEach(b => b.classList.remove("active"));
       if (button) button.classList.add("active");
       document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
       shoppingWrap.classList.remove("hidden");
+      shoppingWrap.open = true;
       document.querySelectorAll("#peopleWrap tr, #sharedWrap tr, #shoppingWrap tr").forEach(row => {
         const boxes = [...row.querySelectorAll('input[type="checkbox"]')];
         if (boxes.length) row.classList.toggle("hidden", boxes.every(box => box.checked));
