@@ -22,7 +22,10 @@
       --mint: #dcfce7;
       --amber: #fef3c7;
       --rose: #fee2e2;
+      --violet: #ede9fe;
+      --sand: #fff7ed;
       --shadow: 0 16px 40px rgba(16, 42, 67, 0.11);
+      --softShadow: 0 8px 20px rgba(16, 42, 67, 0.08);
       --radius: 8px;
       color-scheme: light;
     }
@@ -43,7 +46,10 @@
       --mint: #123526;
       --amber: #3f2f12;
       --rose: #3b171a;
+      --violet: #241d3a;
+      --sand: #3a2819;
       --shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+      --softShadow: 0 8px 20px rgba(0, 0, 0, 0.24);
       color-scheme: dark;
     }
 
@@ -76,8 +82,13 @@
       color: var(--navy);
       cursor: pointer;
       font-weight: 850;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease, background 0.16s ease;
     }
-    button:hover { border-color: #9db0c7; }
+    button:hover { border-color: #9db0c7; transform: translateY(-1px); box-shadow: var(--softShadow); }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 3px solid rgba(244, 185, 66, 0.52);
+      outline-offset: 2px;
+    }
     button.primary { background: var(--navy); border-color: var(--navy); color: #fff; }
     button.ghost { background: rgba(255, 255, 255, 0.15); border-color: rgba(255, 255, 255, 0.28); color: #fff; }
     button.danger { color: var(--red); border-radius: 8px; min-height: 30px; padding: 4px 8px; }
@@ -177,6 +188,17 @@
       gap: 8px;
       flex-wrap: wrap;
     }
+    .findBox {
+      width: 174px;
+      min-height: 34px;
+      border-color: rgba(255, 255, 255, 0.28);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.13);
+      color: #fff;
+      padding: 6px 12px;
+      font-weight: 750;
+    }
+    .findBox::placeholder { color: rgba(255, 255, 255, 0.74); }
     .headerTools button {
       min-height: 34px;
       padding: 5px 10px;
@@ -247,6 +269,7 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--paper);
+      box-shadow: inset 0 3px 0 rgba(15, 118, 110, 0.12);
     }
     .metricTile strong {
       color: var(--navy);
@@ -325,6 +348,7 @@
       padding: 14px;
       box-shadow: 0 10px 26px rgba(16, 42, 67, 0.07);
     }
+    .card:hover { box-shadow: 0 14px 32px rgba(16, 42, 67, 0.1); }
     :root[data-theme="dark"] .card,
     :root[data-theme="dark"] table,
     :root[data-theme="dark"] details,
@@ -339,6 +363,8 @@
     .softMint { background: var(--mint); }
     .softAmber { background: var(--amber); }
     .softRose { background: var(--rose); }
+    .softViolet { background: var(--violet); }
+    .softSand { background: var(--sand); }
     .kpi {
       color: var(--muted);
       font-size: 11px;
@@ -355,6 +381,7 @@
     .small { color: var(--muted); font-size: 12px; }
     .bar { height: 10px; border-radius: 999px; overflow: hidden; background: #e7edf5; }
     .bar > div { height: 100%; width: 0; background: linear-gradient(90deg, var(--teal), #22c55e); }
+    :root[data-theme="dark"] .bar { background: #223145; }
     .pill, .tag {
       display: inline-flex;
       align-items: center;
@@ -383,6 +410,11 @@
       overflow: hidden;
       background: var(--paper);
     }
+    .tableWrap {
+      width: 100%;
+      overflow-x: auto;
+      border-radius: var(--radius);
+    }
     th, td {
       border-bottom: 1px solid var(--line);
       padding: 8px 9px;
@@ -405,6 +437,7 @@
       background: var(--paper);
       overflow: hidden;
     }
+    details[open] summary { border-bottom: 1px solid var(--line); }
     details + details { margin-top: 10px; }
     summary {
       display: flex;
@@ -415,6 +448,13 @@
       cursor: pointer;
       font-weight: 900;
       list-style: none;
+    }
+    .summaryMeta {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
     }
     summary::-webkit-details-marker { display: none; }
     .inner { padding: 0 12px 12px; }
@@ -459,6 +499,125 @@
       color: var(--muted);
       font-size: 12px;
     }
+    .commandGrid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    .actionCard {
+      display: grid;
+      gap: 8px;
+      min-height: 154px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--softShadow);
+    }
+    .actionCard strong {
+      color: var(--navy);
+      font-size: 18px;
+      line-height: 1.12;
+    }
+    .actionCard .tag { width: max-content; }
+    .actionCard.priority { border-top: 4px solid var(--coral); }
+    .actionCard.travel { border-top: 4px solid var(--blue); }
+    .actionCard.packing { border-top: 4px solid var(--teal); }
+    .actionCard.resort { border-top: 4px solid var(--gold); }
+    .focusRail {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .focusTile {
+      min-height: 92px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--paper), rgba(224, 242, 254, 0.36));
+    }
+    :root[data-theme="dark"] .focusTile {
+      background: linear-gradient(180deg, var(--paper), rgba(15, 42, 68, 0.56));
+    }
+    .ownerSummary,
+    .zoneSummary {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .ownerTile,
+    .zoneTile {
+      padding: 11px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .ownerTile strong,
+    .zoneTile strong { color: var(--navy); display: block; margin-bottom: 6px; }
+    .tinyBar {
+      height: 7px;
+      overflow: hidden;
+      border-radius: 999px;
+      background: #e7edf5;
+      margin-top: 7px;
+    }
+    .tinyBar span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--teal), var(--gold));
+    }
+    .resortMap {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+    .resortScene {
+      min-height: 280px;
+      padding: 18px;
+      border-radius: var(--radius);
+      color: #fff;
+      background:
+        linear-gradient(140deg, rgba(16, 42, 67, 0.9), rgba(231, 111, 81, 0.48), rgba(15, 118, 110, 0.72)),
+        url("./cabo-operations-backdrop.png") center / cover;
+      box-shadow: var(--shadow);
+    }
+    .runbook {
+      display: grid;
+      gap: 8px;
+    }
+    .runStep {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 10px;
+      align-items: start;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .runStep b { color: var(--navy); }
+    .decisionMatrix {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .decisionCard {
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .emptyState {
+      padding: 14px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.5);
+    }
+    .is-search-hidden { display: none !important; }
     .hidden { display: none !important; }
     .sectionTools {
       display: flex;
@@ -555,6 +714,10 @@
       .span12, .span8, .span7, .span6, .span5, .span4, .span3 { grid-column: span 6; }
       .restaurant { grid-template-columns: 1fr; }
       .weatherGrid, .seatGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .commandGrid, .focusRail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .ownerSummary, .zoneSummary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .resortMap { grid-template-columns: 1fr; }
+      .decisionMatrix { grid-template-columns: 1fr; }
     }
     @media (max-width: 680px) {
       .wrap { padding: 12px; }
@@ -572,6 +735,9 @@
       th, td { min-width: 130px; }
       .timeline { grid-template-columns: 88px 1fr; }
       .topNav button { padding: 7px 9px; }
+      .findBox { width: 100%; }
+      .commandGrid, .focusRail, .ownerSummary, .zoneSummary { grid-template-columns: 1fr; }
+      .runStep { grid-template-columns: 1fr; }
     }
     @media print {
       .appTop, .pageHeader .actions, button.danger, .sectionTools { display: none !important; }
@@ -598,6 +764,7 @@
     </nav>
     <div class="headerTools" aria-label="Portal tools">
       <span class="dayChip"><span id="daysLeftChip">0</span>days to go</span>
+      <input class="findBox" id="portalSearch" type="search" placeholder="Find anything" aria-label="Find portal content" oninput="searchPortal(this.value)">
       <button onclick="saveAll()">Save</button>
       <button onclick="exportData()">Export</button>
       <button onclick="document.getElementById('importFile').click()">Import</button>
@@ -663,6 +830,32 @@
     </div>
 
     <section id="dashboard" class="page active">
+      <div class="commandGrid">
+        <article class="actionCard priority">
+          <span class="tag">Next best action</span>
+          <strong>Close Friday Lee boarding today.</strong>
+          <p class="small">Firehouse is the best fit. PetSuites is the backup if Firehouse does not close quickly.</p>
+          <button onclick="showPage('dog')">Open Dog Board</button>
+        </article>
+        <article class="actionCard travel">
+          <span class="tag">Transfer gap</span>
+          <strong>Get Andrea&apos;s SJD meeting details.</strong>
+          <p class="small">Company name, arrival pickup instructions, and return pickup time are the key missing inputs.</p>
+          <button onclick="showPage('travel')">Open Travel</button>
+        </article>
+        <article class="actionCard packing">
+          <span class="tag">Packing push</span>
+          <strong>Work from essentials to suitcases.</strong>
+          <p class="small">Clear open purchases first, then use the outstanding filter to pack by person and lane.</p>
+          <button onclick="showPage('packing')">Open Packing</button>
+        </article>
+        <article class="actionCard resort">
+          <span class="tag">Resort setup</span>
+          <strong>Follow the check-in runbook on arrival.</strong>
+          <p class="small">Rooms, dining rules, Kids Club signup, towels, and cabanas are the first-hour questions.</p>
+          <button onclick="showPage('resort')">Open Resort</button>
+        </article>
+      </div>
       <div class="grid">
         <div class="card softBlue span3"><div class="kpi">Trip Count</div><div class="big">6N / 7D</div><div class="small">5 full resort days</div></div>
         <div class="card span3"><div class="kpi">Flights</div><div class="big">Booked</div><div class="small">WN627 outbound, WN628 return</div></div>
@@ -692,6 +885,7 @@
 
         <div class="card span12">
           <h3>Readiness Calculation</h3>
+          <div class="focusRail" id="focusRail" style="margin-bottom:12px"></div>
           <div class="grid" id="readinessRows"></div>
         </div>
       </div>
@@ -759,9 +953,18 @@
         <div class="card softAmber span3"><div class="kpi">Outstanding</div><div class="big" id="outstandingItems">0</div></div>
         <div class="card span3"><div class="kpi">Shopping Open</div><div class="big" id="shoppingOpen">0</div></div>
 
+        <div class="card span6">
+          <h3>Suitcase Readiness</h3>
+          <div class="ownerSummary" id="packingOwnerSummary"></div>
+        </div>
+        <div class="card span6">
+          <h3>Shared Lane Readiness</h3>
+          <div class="zoneSummary" id="packingZoneSummary"></div>
+        </div>
+
         <div class="card span12">
-          <h3>Packing Navigation</h3>
-          <p class="small">Use the sticky filter bar above to keep the packing lanes reachable while scrolling. Shopping is collapsed by default because it is procurement, not suitcase flow.</p>
+          <h3>Packing Workbench</h3>
+          <div id="nextPackingActions" class="decisionMatrix" style="margin-bottom:12px"></div>
           <div class="linkGrid">
             <a href="#peopleWrap">People <span>clothes + shoes</span></a>
             <a href="#sharedWrap">Shared <span>pool, travel, room</span></a>
@@ -781,7 +984,7 @@
           <summary>Shopping + Procurement <span class="pill warn" id="shoppingPanelStatus">Open items</span></summary>
           <div class="inner">
             <p class="small">Procurement is editable here, but keeping it collapsed makes the actual packing lanes easier to work through.</p>
-            <table><tr><th>Item</th><th>Qty</th><th>Owner</th><th>Category</th><th>Ordered</th><th>Delivered</th><th>Packed</th><th>Notes</th><th></th></tr><tbody id="shopRows"></tbody></table>
+            <div class="tableWrap"><table><tr><th>Item</th><th>Qty</th><th>Owner</th><th>Category</th><th>Ordered</th><th>Delivered</th><th>Packed</th><th>Notes</th><th></th></tr><tbody id="shopRows"></tbody></table></div>
             <div class="sectionTools"><button onclick="addShopItem()">Add shopping item</button></div>
           </div>
         </details>
@@ -805,7 +1008,7 @@
         <div class="featurePanel">
           <p class="kpi">Garza Blanca Resort &amp; Spa Los Cabos</p>
           <h2>Resort command center</h2>
-          <p>Use this page for arrival decisions, kid logistics, dining defaults, pool operations, room setup, weather, and the questions that need a human answer at check-in.</p>
+          <p>Arrival decisions, kid logistics, dining defaults, pool operations, room setup, weather, and check-in questions are organized here.</p>
           <div class="sectionTools">
             <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Resort</a>
             <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/all-inclusive">All-inclusive</a>
@@ -821,11 +1024,34 @@
         </div>
       </div>
 
+      <div class="resortMap">
+        <section class="resortScene">
+          <p class="kpi">Arrival Day Operating Plan</p>
+          <h2 style="color:#fff">Land, transfer, check in, anchor the pool base.</h2>
+          <p>Keep the first resort hour focused on keys, wristbands, Kids Club rules, dining reservations, towel/cabana rules, and an easy dinner fallback.</p>
+          <div class="sectionTools">
+            <a class="tag" href="#resort-rooms">Rooms</a>
+            <a class="tag" href="#resort-dining">Dining</a>
+            <a class="tag" href="#resort-kids">Kids Club</a>
+            <a class="tag" href="#resort-pools">Pools</a>
+          </div>
+        </section>
+        <section class="card">
+          <h3>Check-In Runbook</h3>
+          <div class="runbook">
+            <div class="runStep"><span class="pill info">Arrival</span><div><b>Confirm rooms and keys.</b><br><span class="small">Room numbers, proximity, elevator route, wristbands, and any sofa-bed setup.</span></div></div>
+            <div class="runStep"><span class="pill warn">Kids</span><div><b>Get Kids Club rules.</b><br><span class="small">Signup process, hours, age handling, pool-time rules, and babysitting options.</span></div></div>
+            <div class="runStep"><span class="pill ok">Meals</span><div><b>Set dining defaults.</b><br><span class="small">Reservation rules, kids menu, room service, breakfast base, and first dinner plan.</span></div></div>
+            <div class="runStep"><span class="pill neutral">Pool</span><div><b>Find the family base.</b><br><span class="small">Best kid pool, towels, shade, cabanas, stroller parking, and beach safety signal.</span></div></div>
+          </div>
+        </section>
+      </div>
+
       <div class="grid">
         <div class="card span12">
           <h3>Arrival Intelligence</h3>
           <div class="grid">
-            <div class="card compact span4"><h4>All-Inclusive Signal</h4><p>Use the plan for meals, drinks, room service, Wi-Fi, concierge, taxes, and standard resort activities. Premium dishes, bottles, some events, and spa services can still be add-ons.</p></div>
+            <div class="card compact span4"><h4>All-Inclusive Signal</h4><p>The plan covers meals, drinks, room service, Wi-Fi, concierge, taxes, and standard resort activities. Premium dishes, bottles, some events, and spa services can still be add-ons.</p></div>
             <div class="card compact span4"><h4>Check-in Questions</h4><ul><li>Room numbers, proximity, and keys</li><li>Kids Club current schedule and signup process</li><li>Dining reservation rules and kids menu</li><li>Towels, wristbands, cabanas, and best kid pool</li></ul></div>
             <div class="card compact span4"><h4>Low-friction Defaults</h4><ul><li>Breakfast: Blanca Blue</li><li>Pool lunch: Food Truck / pool food</li><li>Tired kids: 24-hour room service</li><li>First full day: pool base, then decide</li></ul></div>
           </div>
@@ -833,6 +1059,11 @@
 
         <div class="card span7" id="resort-dining">
           <h3>Food Dashboard</h3>
+          <div class="decisionMatrix" style="margin-bottom:12px">
+            <div class="decisionCard"><span class="pill ok">Default</span><h4>Breakfast</h4><p class="small">Blanca Blue. Simple start, consistent family default.</p></div>
+            <div class="decisionCard"><span class="pill info">Pool day</span><h4>Lunch</h4><p class="small">Food Truck / pool food. Keep kids in the swim rhythm.</p></div>
+            <div class="decisionCard"><span class="pill warn">Low battery</span><h4>Dinner</h4><p class="small">Room service or NOI Terrazza Italiana if everyone can rally.</p></div>
+          </div>
           <div id="foodDash"></div>
           <p class="sourceNote">Dining rows combine the trip planning file with official resort dining links. Verify hours and reservation rules onsite because resort schedules can shift.</p>
         </div>
@@ -990,14 +1221,14 @@
     ];
 
     const foodRows = [
-      ["Blanca Blue (K)", "Default breakfast / Mexican", "Breakfast 6:30 AM-12:00 PM; Dinner 6:00-10:30 PM", "Best default for easy family meals and Mexican dining without overthinking."],
+      ["Blanca Blue (K)", "Default breakfast / Mexican", "Breakfast 6:30 AM-12:00 PM; Dinner 6:00-10:30 PM", "Best default for easy family meals and Mexican dining with minimal planning."],
       ["Bocados Steak House (I)", "Steakhouse", "Dinner 6:00-10:30 PM", "Good extended-family dinner if energy is decent."],
       ["Hiroshi (F)", "Japanese", "Dinner 6:00-10:30 PM", "Use when adults want something cleaner/lighter; check kid tolerance onsite."],
       ["NOI Terrazza Italiana (C)", "Italian", "Dinner 6:00-10:30 PM", "Likely easiest dinner win for kids."],
       ["The Food Truck / Pool Food (G)", "Lunch default", "Verify onsite", "Best fit for pool days. Keep this as low-friction lunch."],
       ["The Market & Deli (D)", "Snacks / backup", "7:00 AM-10:30 PM", "Use for room snacks, quick breakfast backup, and kid emergencies."],
       ["The Rooftop Pool & Bar (B)", "Adult-leaning", "Pool 12:00-5:00 PM; bar 11:00 AM-6:00 PM; late night 7:00 PM-1:00 AM", "Save for when younger kids are handled."],
-      ["24-hour Room Service", "Emergency plan", "24 hours", "Tired kids, naps, arrival, and departure chaos."],
+      ["24-hour Room Service", "Emergency plan", "24 hours", "Tired kids, naps, arrival, and departure pressure."],
       ["Swim Up Bar (H)", "Pool zone", "Verify onsite", "Useful if parked near the main pool corridor."],
       ["Lobby Bar (A)", "Arrival / waiting", "Verify onsite", "Use during check-in or lobby waits."]
     ];
@@ -1112,6 +1343,7 @@
       pageTitle.textContent = titles[id][0];
       pageSubtitle.textContent = titles[id][1];
       history.replaceState(null, "", "#" + id);
+      searchPortal(portalSearch?.value || "");
     }
 
     function daysUntil() {
@@ -1163,10 +1395,18 @@
         }).join("");
     }
     function renderPeople() {
-      personCards.innerHTML = Object.entries(data.people).map(([person, items]) => `<details class="person-card span6" data-type="${["Olive", "June", "Gibson", "Levon"].includes(person) ? "kids" : "adults"}" open><summary>${person}<span class="pill neutral" id="${person}Stat">0/0</span></summary><div class="inner"><table><tr><th>Category</th><th>Item</th><th>Qty</th><th>Packed</th><th>Notes</th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-person="${person}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-person="${person}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-person="${person}" data-i="${i}" data-f="2"></td><td><input type="checkbox" ${r[3] ? "checked" : ""} data-person="${person}" data-i="${i}" data-f="3"></td><td><input value="${esc(r[4])}" data-person="${person}" data-i="${i}" data-f="4"></td><td><button class="danger" onclick="deletePersonItem('${person}', ${i})">Remove</button></td></tr>`).join("")}</table><div class="sectionTools"><button onclick="addPersonItem('${person}')">Add item for ${person}</button></div></div></details>`).join("");
+      personCards.innerHTML = Object.entries(data.people).map(([person, items]) => {
+        const done = items.filter(i => i[3]).length;
+        const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+        return `<details class="person-card span6" data-type="${["Olive", "June", "Gibson", "Levon"].includes(person) ? "kids" : "adults"}" open><summary>${person}<span class="summaryMeta"><span class="pill neutral" id="${person}Stat">${done}/${items.length}</span><span class="small">${pct}%</span></span></summary><div class="inner"><div class="tinyBar"><span style="width:${pct}%"></span></div><div class="tableWrap" style="margin-top:10px"><table><tr><th>Category</th><th>Item</th><th>Qty</th><th>Packed</th><th>Notes</th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-person="${person}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-person="${person}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-person="${person}" data-i="${i}" data-f="2"></td><td><input type="checkbox" ${r[3] ? "checked" : ""} data-person="${person}" data-i="${i}" data-f="3"></td><td><input value="${esc(r[4])}" data-person="${person}" data-i="${i}" data-f="4"></td><td><button class="danger" onclick="deletePersonItem('${person}', ${i})">Remove</button></td></tr>`).join("")}</table></div><div class="sectionTools"><button onclick="addPersonItem('${person}')">Add item for ${person}</button></div></div></details>`;
+      }).join("");
     }
     function renderShared() {
-      sharedSections.innerHTML = Object.entries(data.shared).map(([section, items]) => `<details class="shared-card" data-sharedsec="${section}" open><summary>${sectionName(section)}<span class="pill neutral" id="${section}Stat">0/0</span></summary><div class="inner"><table><tr><th>Category</th><th>Item</th><th>Qty</th><th>Owner</th><th>Packed</th><th>Notes</th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-shared="${section}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shared="${section}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shared="${section}" data-i="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shared="${section}" data-i="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shared="${section}" data-i="${i}" data-f="4"></td><td><input value="${esc(r[5])}" data-shared="${section}" data-i="${i}" data-f="5"></td><td><button class="danger" onclick="deleteSharedItem('${section}', ${i})">Remove</button></td></tr>`).join("")}</table><div class="sectionTools"><button onclick="addSharedItem('${section}')">Add ${sectionName(section)} item</button></div></div></details>`).join("");
+      sharedSections.innerHTML = Object.entries(data.shared).map(([section, items]) => {
+        const done = items.filter(i => i[4]).length;
+        const pct = items.length ? Math.round((done / items.length) * 100) : 0;
+        return `<details class="shared-card" data-sharedsec="${section}" open><summary>${sectionName(section)}<span class="summaryMeta"><span class="pill neutral" id="${section}Stat">${done}/${items.length}</span><span class="small">${pct}%</span></span></summary><div class="inner"><div class="tinyBar"><span style="width:${pct}%"></span></div><div class="tableWrap" style="margin-top:10px"><table><tr><th>Category</th><th>Item</th><th>Qty</th><th>Owner</th><th>Packed</th><th>Notes</th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-shared="${section}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shared="${section}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shared="${section}" data-i="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shared="${section}" data-i="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shared="${section}" data-i="${i}" data-f="4"></td><td><input value="${esc(r[5])}" data-shared="${section}" data-i="${i}" data-f="5"></td><td><button class="danger" onclick="deleteSharedItem('${section}', ${i})">Remove</button></td></tr>`).join("")}</table></div><div class="sectionTools"><button onclick="addSharedItem('${section}')">Add ${sectionName(section)} item</button></div></div></details>`;
+      }).join("");
     }
     function addPersonItem(person) { collectAll(); data.people[person].push(["Misc", "", "1", false, ""]); renderAll(); }
     function deletePersonItem(person, index) { collectAll(); data.people[person].splice(index, 1); renderAll(); }
@@ -1198,10 +1438,13 @@
 
     function updateMetrics() {
       let packingTotal = 0, packingDone = 0;
+      const peopleStats = [];
+      const sharedStats = [];
       Object.entries(data.people).forEach(([person, items]) => {
         const done = items.filter(i => i[3]).length;
         packingTotal += items.length;
         packingDone += done;
+        peopleStats.push([person, done, items.length]);
         const el = document.getElementById(person + "Stat");
         if (el) el.textContent = `${done}/${items.length}`;
       });
@@ -1209,6 +1452,7 @@
         const done = items.filter(i => i[4]).length;
         packingTotal += items.length;
         packingDone += done;
+        sharedStats.push([sectionName(section), done, items.length]);
         const el = document.getElementById(section + "Stat");
         if (el) el.textContent = `${done}/${items.length}`;
       });
@@ -1235,6 +1479,20 @@
       shopStatusText.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
       shoppingPanelStatus.textContent = shoppingOpenRows.length ? `${shoppingOpenRows.length} open` : "Clear";
       shoppingPanelStatus.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
+      packingOwnerSummary.innerHTML = peopleStats.map(([name, done, total]) => {
+        const pct = total ? Math.round((done / total) * 100) : 0;
+        return `<div class="ownerTile"><strong>${name}</strong><span class="small">${done}/${total} packed</span><div class="tinyBar"><span style="width:${pct}%"></span></div></div>`;
+      }).join("");
+      packingZoneSummary.innerHTML = sharedStats.map(([name, done, total]) => {
+        const pct = total ? Math.round((done / total) * 100) : 0;
+        return `<div class="zoneTile"><strong>${name}</strong><span class="small">${done}/${total} packed</span><div class="tinyBar"><span style="width:${pct}%"></span></div></div>`;
+      }).join("");
+      const nextActions = [
+        shoppingCritical ? ["bad", "Buy essentials", `${shoppingCritical} essential purchase${shoppingCritical === 1 ? "" : "s"} still open.`] : ["ok", "Essentials", "No essential shopping blockers."],
+        packedPct < 50 ? ["warn", "Pack the base", "Use Kids, Adults, and Pool filters before shopping rows."] : ["ok", "Packing pace", "Core packing has momentum."],
+        data.shared.travel.some(x => !x[4]) ? ["info", "Carry-on docs", "Passports and flight confirmations stay in carry-on only."] : ["ok", "Travel docs", "Travel-day lane is packed."]
+      ];
+      nextPackingActions.innerHTML = nextActions.map(([cls, title, body]) => `<div class="decisionCard"><span class="pill ${cls}">${title}</span><p class="small" style="margin-top:8px">${body}</p></div>`).join("");
 
       const scores = [
         ["Flights", 100, "Booked"],
@@ -1259,6 +1517,13 @@
       criticalMetric.textContent = criticalItems;
       transferMetric.textContent = data.checks.order_transfer ? "Confirmed" : "Pending";
       readinessRows.innerHTML = scores.map(s => `<div class="miniPanel span3"><div class="kpi">${s[0]}</div><div class="big" style="font-size:22px">${s[1]}%</div><div class="small">${s[2]}</div></div>`).join("");
+      focusRail.innerHTML = [
+        ["Dog", data.checks.order_dog ? "Booked" : "Call Firehouse", data.checks.order_dog ? "ok" : "warn"],
+        ["Transfer", data.checks.order_transfer ? "Confirmed" : "Andrea pending", data.checks.order_transfer ? "ok" : "warn"],
+        ["Docs", data.checks.order_docs ? "Updated" : "Passport info", data.checks.order_docs ? "ok" : "bad"],
+        ["Shopping", shoppingCritical ? `${shoppingCritical} essential` : shoppingDecisionRows.length ? `${shoppingDecisionRows.length} decisions` : "Clear", shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok"],
+        ["Packing", `${packedPct}%`, packedPct > 80 ? "ok" : packedPct > 40 ? "info" : "warn"]
+      ].map(([label, value, cls]) => `<div class="focusTile"><span class="pill ${cls}">${label}</span><div class="big" style="font-size:20px;margin-top:8px">${value}</div></div>`).join("");
     }
 
     function filterPacking(type, button) {
@@ -1301,6 +1566,21 @@
     function expandPacking() { document.querySelectorAll("#packing details").forEach(d => d.open = true); }
     function collapsePacking() { document.querySelectorAll("#packing details").forEach(d => d.open = false); }
 
+    function searchPortal(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll(".is-search-hidden").forEach(el => el.classList.remove("is-search-hidden"));
+      if (!q) return;
+      const active = document.querySelector(".page.active");
+      if (!active) return;
+      const targets = active.querySelectorAll(".restaurant, details, .actionCard, .quickCard, .decisionCard, .ownerTile, .zoneTile, .miniPanel, .focusTile");
+      targets.forEach(el => {
+        const fieldText = [...el.querySelectorAll("input, textarea, select")].map(input => input.value).join(" ");
+        const text = `${el.textContent} ${fieldText}`.toLowerCase();
+        el.classList.toggle("is-search-hidden", !text.includes(q));
+        if (el.tagName === "DETAILS" && text.includes(q)) el.open = true;
+      });
+    }
+
     function exportData() {
       collectAll();
       const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
@@ -1334,6 +1614,18 @@
     }
 
     renderAll();
+    portalSearch?.addEventListener("input", event => searchPortal(event.target.value));
+    document.addEventListener("keydown", event => {
+      if (event.key === "/" && !["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement.tagName)) {
+        event.preventDefault();
+        portalSearch?.focus();
+      }
+      if (event.key === "Escape" && document.activeElement === portalSearch) {
+        portalSearch.value = "";
+        searchPortal("");
+        portalSearch.blur();
+      }
+    });
     const initial = location.hash?.replace("#", "");
     if (initial && document.getElementById(initial)) showPage(initial);
   </script>
