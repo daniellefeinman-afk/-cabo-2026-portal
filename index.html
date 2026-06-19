@@ -124,14 +124,22 @@
       top: 0;
       z-index: 30;
       display: grid;
-      grid-template-columns: auto minmax(360px, 1fr) auto;
-      gap: 14px;
-      align-items: center;
-      padding: 12px 18px;
-      background: rgba(16, 42, 67, 0.96);
+      grid-template-columns: 1fr;
+      gap: 10px;
+      padding: 12px 18px 10px;
+      background:
+        linear-gradient(135deg, rgba(16, 42, 67, 0.98), rgba(14, 82, 88, 0.96));
       color: #fff;
       box-shadow: 0 10px 28px rgba(16, 42, 67, 0.18);
       backdrop-filter: blur(12px);
+    }
+    .topBar,
+    .navBar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-width: 0;
     }
     .brand {
       display: inline-flex;
@@ -152,44 +160,51 @@
     }
     .brandText strong { display: block; font-size: 15px; line-height: 1.1; }
     .brandText span { display: block; color: #cfe5f4; font-size: 12px; font-weight: 700; }
-    .topNav, .hotlinks, .actions, .filters, .tabs {
+    .topNav, .actions, .filters, .tabs {
       display: flex;
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
     }
-    .topNav { justify-content: center; }
+    .topNav {
+      justify-content: flex-start;
+      min-width: 0;
+      padding: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
     .topNav button {
-      padding: 7px 11px;
+      min-height: 34px;
+      padding: 6px 12px;
       border-color: transparent;
       background: transparent;
       color: #d7e8f6;
       white-space: nowrap;
+      box-shadow: none;
+    }
+    .topNav button:hover {
+      transform: none;
+      box-shadow: none;
+      background: rgba(255, 255, 255, 0.12);
     }
     .topNav button.active {
       background: #fff;
       color: var(--navy);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
     }
-    .hotlinks { justify-content: flex-end; }
-    .hotlinks a {
-      display: inline-flex;
-      align-items: center;
-      min-height: 32px;
-      padding: 5px 9px;
-      border: 1px solid rgba(255, 255, 255, 0.22);
-      border-radius: 999px;
-      color: #fff;
-      font-size: 12px;
-    }
-    .headerTools {
+    .topNav button.active:hover { background: #fff; }
+    .utilityCluster {
+      position: relative;
       display: flex;
       justify-content: flex-end;
       align-items: center;
       gap: 8px;
-      flex-wrap: wrap;
+      min-width: 0;
     }
     .findBox {
-      width: 174px;
+      width: clamp(180px, 22vw, 300px);
       min-height: 34px;
       border-color: rgba(255, 255, 255, 0.28);
       border-radius: 999px;
@@ -199,12 +214,83 @@
       font-weight: 750;
     }
     .findBox::placeholder { color: rgba(255, 255, 255, 0.74); }
-    .headerTools button {
+    .headerButton,
+    .headerMenu > summary,
+    .headerMenu button {
       min-height: 34px;
       padding: 5px 10px;
       border-color: rgba(255, 255, 255, 0.22);
       background: rgba(255, 255, 255, 0.1);
       color: #fff;
+    }
+    .headerMenu {
+      position: relative;
+      overflow: visible;
+      border: 0;
+      background: transparent;
+    }
+    .headerMenu > summary {
+      align-items: center;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      list-style: none;
+      white-space: nowrap;
+    }
+    .headerMenu > summary::after {
+      content: "v";
+      margin-left: 8px;
+      color: rgba(255, 255, 255, 0.72);
+      font-size: 12px;
+    }
+    .headerMenu[open] > summary {
+      background: #fff;
+      color: var(--navy);
+    }
+    .headerMenu[open] > summary::after { color: var(--navy); }
+    .menuPanel {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 60;
+      display: grid;
+      min-width: 230px;
+      gap: 7px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+    .headerMenu:not([open]) .menuPanel { display: none; }
+    .menuPanel a,
+    .menuPanel button {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      min-height: 34px;
+      width: 100%;
+      padding: 7px 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--wash);
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 900;
+      text-align: left;
+    }
+    .menuPanel button:hover,
+    .menuPanel a:hover {
+      text-decoration: none;
+      border-color: #9db0c7;
+      transform: translateY(-1px);
+      box-shadow: var(--softShadow);
+    }
+    .menuLabel {
+      margin: 2px 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
     }
     .dayChip {
       display: inline-flex;
@@ -227,14 +313,6 @@
       background: var(--gold);
       color: #102a43;
     }
-    .linkRail {
-      grid-column: 1 / -1;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      min-width: 0;
-    }
 
     .wrap {
       width: min(1540px, 100%);
@@ -243,7 +321,7 @@
     }
     .metricsStrip {
       position: sticky;
-      top: 74px;
+      top: 118px;
       z-index: 22;
       display: grid;
       grid-template-columns: repeat(5, minmax(160px, 1fr));
@@ -311,7 +389,7 @@
     }
     .pageHeader {
       position: sticky;
-      top: 152px;
+      top: 196px;
       z-index: 20;
       display: flex;
       justify-content: space-between;
@@ -627,7 +705,7 @@
     }
     .stickySubTabs {
       position: sticky;
-      top: 236px;
+      top: 280px;
       z-index: 18;
       display: flex;
       flex-wrap: wrap;
@@ -702,13 +780,14 @@
     }
 
     @media (max-width: 1120px) {
-      .appTop { grid-template-columns: 1fr; }
-      .linkRail { flex-direction: column; align-items: flex-start; }
-      .topNav, .hotlinks, .headerTools { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 2px; width: 100%; }
-      .metricsStrip { top: 176px; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .appTop { position: static; }
+      .topBar, .navBar { align-items: flex-start; }
+      .navBar { flex-direction: column; }
+      .topNav, .utilityCluster { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 3px; width: 100%; }
+      .metricsStrip { position: static; grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .heroBand { grid-template-columns: 1fr; }
-      .pageHeader { top: 322px; flex-direction: column; align-items: flex-start; }
-      .stickySubTabs { top: 420px; }
+      .pageHeader { position: static; flex-direction: column; align-items: flex-start; }
+      .stickySubTabs { top: 0; }
       .pageIntro { grid-template-columns: 1fr; }
       .grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
       .span12, .span8, .span7, .span6, .span5, .span4, .span3 { grid-column: span 6; }
@@ -721,7 +800,13 @@
     }
     @media (max-width: 680px) {
       .wrap { padding: 12px; }
-      .appTop { position: static; }
+      .appTop { padding: 10px 12px; }
+      .topBar { align-items: center; }
+      .brandMark { width: 36px; height: 36px; }
+      .brandText strong { font-size: 14px; }
+      .brandText span { font-size: 11px; }
+      .dayChip { min-height: 30px; padding: 4px 9px; font-size: 12px; }
+      .dayChip span { min-width: 23px; height: 23px; }
       .metricsStrip { position: static; grid-template-columns: 1fr; }
       .pageHeader { position: static; }
       .stickySubTabs { position: sticky; top: 0; }
@@ -734,8 +819,19 @@
       table { display: block; overflow-x: auto; white-space: nowrap; }
       th, td { min-width: 130px; }
       .timeline { grid-template-columns: 88px 1fr; }
+      .topNav { border-radius: 8px; }
       .topNav button { padding: 7px 9px; }
       .findBox { width: 100%; }
+      .utilityCluster { display: grid; grid-template-columns: 1fr auto auto auto; overflow: visible; }
+      .headerMenu { position: static; }
+      .menuPanel {
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        top: calc(100% + 8px);
+        margin-top: 8px;
+        min-width: 0;
+      }
       .commandGrid, .focusRail, .ownerSummary, .zoneSummary { grid-template-columns: 1fr; }
       .runStep { grid-template-columns: 1fr; }
     }
@@ -750,40 +846,50 @@
 </head>
 <body>
   <header class="appTop">
-    <a class="brand" href="#dashboard" onclick="showPage('dashboard')">
-      <span class="brandMark">26</span>
-      <span class="brandText"><strong>Cabo 2026</strong><span>Family Operations Portal</span></span>
-    </a>
-    <nav class="topNav" aria-label="Portal sections">
-      <button class="active" data-nav="dashboard" onclick="showPage('dashboard', this)">Dashboard</button>
-      <button data-nav="travel" onclick="showPage('travel', this)">Travel</button>
-      <button data-nav="packing" onclick="showPage('packing', this)">Packing</button>
-      <button data-nav="resort" onclick="showPage('resort', this)">Resort</button>
-      <button data-nav="dog" onclick="showPage('dog', this)">Dog Boarding</button>
-      <button data-nav="sources" onclick="showPage('sources', this)">Sources</button>
-    </nav>
-    <div class="headerTools" aria-label="Portal tools">
+    <div class="topBar">
+      <a class="brand" href="#dashboard" onclick="showPage('dashboard')">
+        <span class="brandMark">26</span>
+        <span class="brandText"><strong>Cabo 2026</strong><span>Family Operations Portal</span></span>
+      </a>
       <span class="dayChip"><span id="daysLeftChip">0</span>days to go</span>
-      <input class="findBox" id="portalSearch" type="search" placeholder="Find anything" aria-label="Find portal content" oninput="searchPortal(this.value)">
-      <button onclick="saveAll()">Save</button>
-      <button onclick="exportData()">Export</button>
-      <button onclick="document.getElementById('importFile').click()">Import</button>
-      <input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)">
-      <button onclick="window.print()">Print</button>
-      <button id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">Dark</button>
     </div>
-    <div class="linkRail">
-      <div class="hotlinks" aria-label="In-site links">
-        <a href="#packing" onclick="showPage('packing')">Packing Hub</a>
-        <a href="#resort" onclick="showPage('resort')">Resort Hub</a>
-        <a href="#sources" onclick="showPage('sources')">Live Links</a>
-      </div>
-      <div class="hotlinks" aria-label="Live links">
-        <a target="_blank" rel="noreferrer" href="https://www.southwest.com/air/manage-reservation/">Southwest</a>
-        <a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Garza Blanca</a>
-        <a target="_blank" rel="noreferrer" href="https://www.aeropuertosgap.com.mx/en/los-cabos-3.html">SJD</a>
-        <a target="_blank" rel="noreferrer" href="https://www.flyaustin.com/">AUS</a>
-        <a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Firehouse</a>
+    <div class="navBar">
+      <nav class="topNav" aria-label="Portal sections">
+        <button class="active" data-nav="dashboard" onclick="showPage('dashboard', this)">Dashboard</button>
+        <button data-nav="travel" onclick="showPage('travel', this)">Travel</button>
+        <button data-nav="packing" onclick="showPage('packing', this)">Packing</button>
+        <button data-nav="resort" onclick="showPage('resort', this)">Resort</button>
+        <button data-nav="dog" onclick="showPage('dog', this)">Dog</button>
+        <button data-nav="sources" onclick="showPage('sources', this)">Sources</button>
+      </nav>
+      <div class="utilityCluster" aria-label="Portal utilities">
+        <input class="findBox" id="portalSearch" type="search" placeholder="Find anything" aria-label="Find portal content" oninput="searchPortal(this.value)">
+        <details class="headerMenu">
+          <summary>Live Links</summary>
+          <div class="menuPanel">
+            <div class="menuLabel">Travel</div>
+            <a target="_blank" rel="noreferrer" href="https://www.southwest.com/air/manage-reservation/">Southwest <span>Open</span></a>
+            <a target="_blank" rel="noreferrer" href="https://www.aeropuertosgap.com.mx/en/los-cabos-3.html">SJD Airport <span>Open</span></a>
+            <a target="_blank" rel="noreferrer" href="https://www.flyaustin.com/">AUS Airport <span>Open</span></a>
+            <div class="menuLabel">Resort</div>
+            <a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Garza Blanca <span>Open</span></a>
+            <div class="menuLabel">Friday Lee</div>
+            <a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Firehouse <span>Open</span></a>
+            <a target="_blank" rel="noreferrer" href="https://www.campbowwow.com/austin/services-pricing/dog-boarding/">Camp Bow Wow <span>Open</span></a>
+            <a target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/services/boarding">PetSuites <span>Open</span></a>
+          </div>
+        </details>
+        <details class="headerMenu">
+          <summary>Tools</summary>
+          <div class="menuPanel">
+            <button onclick="saveAll()">Save changes</button>
+            <button onclick="exportData()">Export data</button>
+            <button onclick="document.getElementById('importFile').click()">Import data</button>
+            <button onclick="window.print()">Print portal</button>
+          </div>
+        </details>
+        <input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)">
+        <button class="headerButton" id="themeToggle" onclick="toggleTheme()" aria-label="Toggle dark mode">Dark</button>
       </div>
     </div>
   </header>
