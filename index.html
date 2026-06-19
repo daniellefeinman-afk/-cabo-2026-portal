@@ -812,9 +812,29 @@
     }
     .ownerTile strong,
     .zoneTile strong { color: var(--navy); display: block; margin-bottom: 6px; }
-    #packing[data-mode="shopping"] .packingModeOnly,
-    #packing[data-mode="packing"] .shoppingModeOnly {
+    #packing[data-view="overview"] .packingListOnly,
+    #packing[data-view="overview"] .shoppingViewOnly,
+    #packing[data-view="overview"] .packingFilterOnly,
+    #packing[data-view="overview"] .shoppingFilterOnly,
+    #packing[data-view="list"] .packingOverviewOnly,
+    #packing[data-view="list"] .shoppingViewOnly,
+    #packing[data-view="list"] .shoppingFilterOnly,
+    #packing[data-view="shopping"] .packingOverviewOnly,
+    #packing[data-view="shopping"] .packingListOnly,
+    #packing[data-view="shopping"] .packingFilterOnly {
       display: none !important;
+    }
+    #resort[data-resort-view="overview"] .resortPanel:not(.resortOverviewPanel),
+    #resort[data-resort-view="weather"] .resortPanel:not(.resortWeatherPanel),
+    #resort[data-resort-view="dining"] .resortPanel:not(.resortDiningPanel),
+    #resort[data-resort-view="pools"] .resortPanel:not(.resortPoolsPanel),
+    #resort[data-resort-view="kids"] .resortPanel:not(.resortKidsPanel),
+    #resort[data-resort-view="rooms"] .resortPanel:not(.resortRoomsPanel),
+    #resort[data-resort-view="notes"] .resortPanel:not(.resortNotesPanel) {
+      display: none !important;
+    }
+    #resort:not([data-resort-view="overview"]) .resortPanel.card {
+      grid-column: span 12;
     }
     .modeSwitch {
       display: inline-flex;
@@ -955,7 +975,8 @@
       padding: 4px 9px;
       font-size: 12px;
     }
-    .stickySubTabs button.active {
+    .stickySubTabs button.active,
+    .stickySubTabs .tag.active {
       background: #e2f5f8;
       color: var(--navy);
       border-color: rgba(10, 147, 150, 0.35);
@@ -1462,66 +1483,67 @@
       </div>
     </section>
 
-    <section id="packing" class="page" data-mode="packing">
+    <section id="packing" class="page" data-mode="packing" data-view="overview">
       <div class="stickySubTabs" id="packingTabs">
-        <span class="modeSwitch" aria-label="Packing workspace mode">
-          <button class="active" data-pack-mode="packing" onclick="setPackingMode('packing', this)">Packing</button>
-          <button data-pack-mode="shopping" onclick="setPackingMode('shopping', this)">Shopping</button>
+        <span class="modeSwitch" aria-label="Packing workspace view">
+          <button class="active" data-pack-view="overview" onclick="setPackingView('overview', this)">Overview</button>
+          <button data-pack-view="list" onclick="setPackingView('list', this)">Packing list</button>
+          <button data-pack-view="shopping" onclick="setPackingView('shopping', this)">Shopping</button>
         </span>
-        <button class="active packingModeOnly" data-pack-filter="all" onclick="filterPacking('all', this)">All</button>
-        <button class="packingModeOnly" data-pack-filter="kids" onclick="filterPacking('kids', this)">Kids</button>
-        <button class="packingModeOnly" data-pack-filter="adults" onclick="filterPacking('adults', this)">Adults</button>
-        <button class="packingModeOnly" data-pack-filter="pool" onclick="filterPacking('pool', this)">Pool + Beach</button>
-        <button class="packingModeOnly" data-pack-filter="toiletries" onclick="filterPacking('toiletries', this)">Toiletries</button>
-        <button class="packingModeOnly" data-pack-filter="travel" onclick="filterPacking('travel', this)">Travel Day</button>
-        <button class="packingModeOnly" data-pack-filter="room" onclick="filterPacking('room', this)">Room Setup</button>
-        <button class="packingModeOnly" data-pack-filter="outstanding" onclick="showOutstandingOnly(this)">Outstanding</button>
-        <button class="shoppingModeOnly active" data-shop-filter="open" onclick="setShoppingFilter('open', this)">Open</button>
-        <button class="shoppingModeOnly" data-shop-filter="needs-order" onclick="setShoppingFilter('needs-order', this)">Needs order</button>
-        <button class="shoppingModeOnly" data-shop-filter="ordered" onclick="setShoppingFilter('ordered', this)">Ordered</button>
-        <button class="shoppingModeOnly" data-shop-filter="delivered" onclick="setShoppingFilter('delivered', this)">Delivered</button>
-        <button class="shoppingModeOnly" data-shop-filter="packed" onclick="setShoppingFilter('packed', this)">Packed</button>
-        <button class="shoppingModeOnly" data-shop-filter="decision" onclick="setShoppingFilter('decision', this)">Decisions</button>
-        <button class="shoppingModeOnly" data-shop-filter="all" onclick="setShoppingFilter('all', this)">All</button>
+        <button class="active packingFilterOnly" data-pack-filter="all" onclick="filterPacking('all', this)">All</button>
+        <button class="packingFilterOnly" data-pack-filter="kids" onclick="filterPacking('kids', this)">Kids</button>
+        <button class="packingFilterOnly" data-pack-filter="adults" onclick="filterPacking('adults', this)">Adults</button>
+        <button class="packingFilterOnly" data-pack-filter="pool" onclick="filterPacking('pool', this)">Pool + Beach</button>
+        <button class="packingFilterOnly" data-pack-filter="toiletries" onclick="filterPacking('toiletries', this)">Toiletries</button>
+        <button class="packingFilterOnly" data-pack-filter="travel" onclick="filterPacking('travel', this)">Travel Day</button>
+        <button class="packingFilterOnly" data-pack-filter="room" onclick="filterPacking('room', this)">Room Setup</button>
+        <button class="packingFilterOnly" data-pack-filter="outstanding" onclick="showOutstandingOnly(this)">Outstanding</button>
+        <button class="shoppingFilterOnly active" data-shop-filter="open" onclick="setShoppingFilter('open', this)">Open</button>
+        <button class="shoppingFilterOnly" data-shop-filter="needs-order" onclick="setShoppingFilter('needs-order', this)">Needs order</button>
+        <button class="shoppingFilterOnly" data-shop-filter="ordered" onclick="setShoppingFilter('ordered', this)">Ordered</button>
+        <button class="shoppingFilterOnly" data-shop-filter="delivered" onclick="setShoppingFilter('delivered', this)">Delivered</button>
+        <button class="shoppingFilterOnly" data-shop-filter="packed" onclick="setShoppingFilter('packed', this)">Packed</button>
+        <button class="shoppingFilterOnly" data-shop-filter="decision" onclick="setShoppingFilter('decision', this)">Decisions</button>
+        <button class="shoppingFilterOnly" data-shop-filter="all" onclick="setShoppingFilter('all', this)">All</button>
         <span class="spacer"></span>
-        <button class="packingModeOnly" onclick="expandPacking()">Expand all</button>
-        <button class="packingModeOnly" onclick="collapsePacking()">Collapse all</button>
+        <button class="packingFilterOnly" onclick="expandPacking()">Expand all</button>
+        <button class="packingFilterOnly" onclick="collapsePacking()">Collapse all</button>
       </div>
 
       <div class="grid">
-        <div class="card softBlue span3 metricButton" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><div class="kpi">Overall Packed</div><div class="big" id="overallPacked">0%</div><div class="bar"><div id="overallPackedBar"></div></div></div>
-        <div class="card span3"><div class="kpi">Packed Items</div><div class="big" id="packedItems">0/0</div></div>
-        <div class="card softAmber span3 metricButton" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><div class="kpi">Outstanding</div><div class="big" id="outstandingItems">0</div></div>
-        <div class="card span3 metricButton" role="button" tabindex="0" onclick="openAction('shopping-open')" onkeydown="activateFromKey(event, () => openAction('shopping-open'))"><div class="kpi">Shopping Open</div><div class="big" id="shoppingOpen">0</div></div>
+        <div class="card softBlue span3 metricButton packingOverviewOnly" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><div class="kpi">Overall Packed</div><div class="big" id="overallPacked">0%</div><div class="bar"><div id="overallPackedBar"></div></div></div>
+        <div class="card span3 packingOverviewOnly"><div class="kpi">Packed Items</div><div class="big" id="packedItems">0/0</div></div>
+        <div class="card softAmber span3 metricButton packingOverviewOnly" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><div class="kpi">Outstanding</div><div class="big" id="outstandingItems">0</div></div>
+        <div class="card span3 metricButton packingOverviewOnly" role="button" tabindex="0" onclick="openAction('shopping-open')" onkeydown="activateFromKey(event, () => openAction('shopping-open'))"><div class="kpi">Shopping Open</div><div class="big" id="shoppingOpen">0</div></div>
 
-        <div class="card span6 packingModeOnly">
+        <div class="card span6 packingOverviewOnly">
           <h3>Suitcase Readiness</h3>
           <div class="ownerSummary" id="packingOwnerSummary"></div>
         </div>
-        <div class="card span6 packingModeOnly">
+        <div class="card span6 packingOverviewOnly">
           <h3>Shared Lane Readiness</h3>
           <div class="zoneSummary" id="packingZoneSummary"></div>
         </div>
 
-        <div class="card span12 packingModeOnly">
+        <div class="card span12 packingOverviewOnly">
           <h3>Packing Workbench</h3>
           <div id="nextPackingActions" class="decisionMatrix" style="margin-bottom:12px"></div>
           <div class="linkGrid">
-            <a href="#peopleWrap">People <span>clothes + shoes</span></a>
-            <a href="#sharedWrap">Shared <span>pool, travel, room</span></a>
-            <a href="#shoppingWrap" onclick="setPackingMode('shopping')">Shopping <span>open purchases</span></a>
+            <a href="#peopleWrap" onclick="filterPacking('kids')">People <span>clothes + shoes</span></a>
+            <a href="#sharedWrap" onclick="filterPacking('pool')">Shared <span>pool, travel, room</span></a>
+            <a href="#shoppingWrap" onclick="setPackingView('shopping')">Shopping <span>open purchases</span></a>
           </div>
         </div>
 
-        <div class="card span12 packingModeOnly" id="peopleWrap">
+        <div class="card span12 packingListOnly" id="peopleWrap">
           <h3>Per-Person Packing</h3>
           <div id="personCards" class="grid"></div>
         </div>
-        <div class="card span12 packingModeOnly" id="sharedWrap">
+        <div class="card span12 packingListOnly" id="sharedWrap">
           <h3>Shared Packing Sections</h3>
           <div id="sharedSections"></div>
         </div>
-        <div class="card span12 shoppingModeOnly">
+        <div class="card span12 shoppingViewOnly">
           <h3>Shopping Command</h3>
           <div class="shoppingToolbar">
             <span class="pill warn" id="shoppingCommandStatus">Open items</span>
@@ -1531,7 +1553,7 @@
           </div>
           <p class="small">Use the status chips above or the column headers below to sort and isolate what still needs to be ordered, delivered, or packed.</p>
         </div>
-        <details class="card span12 shoppingPanel shoppingModeOnly" id="shoppingWrap" open>
+        <details class="card span12 shoppingPanel shoppingViewOnly" id="shoppingWrap" open>
           <summary>Shopping + Procurement <span class="pill warn" id="shoppingPanelStatus">Open items</span></summary>
           <div class="inner">
             <div class="tableWrap"><table><tr><th><button class="sortHead" onclick="sortShopping('item')">Item</button></th><th><button class="sortHead" onclick="sortShopping('qty')">Qty</button></th><th><button class="sortHead" onclick="sortShopping('owner')">Owner</button></th><th><button class="sortHead" onclick="sortShopping('category')">Category</button></th><th><button class="sortHead" onclick="sortShopping('ordered')">Ordered</button></th><th><button class="sortHead" onclick="sortShopping('delivered')">Delivered</button></th><th><button class="sortHead" onclick="sortShopping('packed')">Packed</button></th><th><button class="sortHead" onclick="sortShopping('notes')">Notes</button></th><th></th></tr><tbody id="shopRows"></tbody></table></div>
@@ -1541,21 +1563,21 @@
       </div>
     </section>
 
-    <section id="resort" class="page">
+    <section id="resort" class="page" data-resort-view="overview">
       <div class="stickySubTabs resortJumpMenu">
-        <a class="tag active" href="#resort-overview">Overview</a>
-        <a class="tag" href="#resort-weather">Weather</a>
-        <a class="tag" href="#resort-dining">Dining</a>
-        <a class="tag" href="#resort-pools">Pools &amp; beach</a>
-        <a class="tag" href="#resort-kids">Kids Club</a>
-        <a class="tag" href="#resort-rooms">Rooms &amp; setup</a>
-        <a class="tag" href="#resort-notes">Onsite Notes</a>
+        <button class="active" data-resort-view="overview" onclick="setResortView('overview', this)">Overview</button>
+        <button data-resort-view="weather" onclick="setResortView('weather', this)">Weather</button>
+        <button data-resort-view="dining" onclick="setResortView('dining', this)">Dining</button>
+        <button data-resort-view="pools" onclick="setResortView('pools', this)">Pools &amp; beach</button>
+        <button data-resort-view="kids" onclick="setResortView('kids', this)">Kids Club</button>
+        <button data-resort-view="rooms" onclick="setResortView('rooms', this)">Rooms &amp; setup</button>
+        <button data-resort-view="notes" onclick="setResortView('notes', this)">Onsite Notes</button>
         <span class="spacer"></span>
         <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Official Site</a>
         <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Dining</a>
       </div>
 
-      <div class="pageIntro" id="resort-overview">
+      <div class="pageIntro resortPanel resortOverviewPanel" id="resort-overview">
         <div class="featurePanel">
           <p class="kpi">Garza Blanca Resort &amp; Spa Los Cabos</p>
           <h2>Resort command center</h2>
@@ -1575,16 +1597,16 @@
         </div>
       </div>
 
-      <div class="resortMap">
+      <div class="resortMap resortPanel resortOverviewPanel">
         <section class="resortScene">
           <p class="kpi">Arrival Day Operating Plan</p>
           <h2 style="color:#fff">Land, transfer, check in, anchor the pool base.</h2>
           <p>Keep the first resort hour focused on keys, wristbands, Kids Club rules, dining reservations, towel/cabana rules, and an easy dinner fallback.</p>
           <div class="sectionTools">
-            <a class="tag" href="#resort-rooms">Rooms</a>
-            <a class="tag" href="#resort-dining">Dining</a>
-            <a class="tag" href="#resort-kids">Kids Club</a>
-            <a class="tag" href="#resort-pools">Pools</a>
+            <button onclick="setResortView('rooms')">Rooms</button>
+            <button onclick="setResortView('dining')">Dining</button>
+            <button onclick="setResortView('kids')">Kids Club</button>
+            <button onclick="setResortView('pools')">Pools</button>
           </div>
         </section>
         <section class="card">
@@ -1599,7 +1621,7 @@
       </div>
 
       <div class="grid">
-        <div class="card span12" id="resort-weather">
+        <div class="card span12 resortPanel resortWeatherPanel" id="resort-weather">
           <h3>Weather</h3>
           <div class="grid">
             <div class="card compact span3"><span class="pill ok">Trip Signal</span><h4>Pool-first weather</h4><div class="small">Warm, dry, sun-heavy pattern.</div></div>
@@ -1611,7 +1633,7 @@
           <p class="sourceNote">Forecast values are from the Cabo resort hub snapshot dated June 18, 2026. Refresh again inside the final week before travel and on beach days.</p>
         </div>
 
-        <div class="card span7" id="resort-dining">
+        <div class="card span7 resortPanel resortDiningPanel" id="resort-dining">
           <h3>Dining Board</h3>
           <div class="decisionMatrix" style="margin-bottom:12px">
             <div class="decisionCard"><span class="pill ok">Default</span><h4>Breakfast</h4><p class="small">Blanca Blue. Simple start, consistent family default.</p></div>
@@ -1621,7 +1643,7 @@
           <div id="foodDash"></div>
           <p class="sourceNote">Dining rows combine the trip planning file with official resort dining links. Verify hours and reservation rules onsite because resort schedules can shift.</p>
         </div>
-        <div class="card span5" id="resort-kids">
+        <div class="card span5 resortPanel resortKidsPanel" id="resort-kids">
           <h3>Kids Club + Activities</h3>
           <table>
             <tr><th>Feature</th><th>Details</th></tr>
@@ -1634,7 +1656,7 @@
           <div class="sectionTools"><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/kids-club">Open Kids Club</a><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Open Activities</a></div>
         </div>
 
-        <div class="card span6" id="resort-pools">
+        <div class="card span6 resortPanel resortPoolsPanel" id="resort-pools">
           <h3>Pools + Beach</h3>
           <table>
             <tr><th>Area</th><th>What to know</th></tr>
@@ -1647,12 +1669,12 @@
             <tr><td>Beachfront</td><td>Beach available; surf can be real, so pool is the default with kids.</td></tr>
           </table>
         </div>
-        <div class="card span6">
+        <div class="card span6 resortPanel resortPoolsPanel">
           <h3>Daily Pool Tote</h3>
           <table><tr><th>Item</th><th>Qty</th><th>Packed</th></tr><tbody id="poolToteRows"></tbody></table>
         </div>
 
-        <div class="card span12" id="resort-rooms">
+        <div class="card span12 resortPanel resortRoomsPanel" id="resort-rooms">
           <h3>Rooms + Setup</h3>
           <table>
             <tr><th>Travelers</th><th>Working room type</th><th>Setup notes</th></tr>
@@ -1663,7 +1685,7 @@
           <p class="sourceNote">Known: no connecting rooms. Resort will try proximity. Room numbers and proximity are check-in issues.</p>
         </div>
 
-        <div class="card span12">
+        <div class="card span12 resortPanel resortOverviewPanel">
           <h3>Arrival Intelligence</h3>
           <div class="decisionMatrix">
             <div class="decisionCard"><span class="pill info">Included</span><h4>All-inclusive signal</h4><p class="small">Meals, drinks, room service, Wi-Fi, concierge, taxes, and standard resort activities are covered. Premium items may still be add-ons.</p></div>
@@ -1672,7 +1694,7 @@
           </div>
         </div>
 
-        <div class="card span12" id="resort-notes">
+        <div class="card span12 resortPanel resortNotesPanel" id="resort-notes">
           <h3>Onsite Planning Notes</h3>
           <table><tr><th>Day</th><th>Plan / Note</th><th>Owner</th><th>Done</th><th></th></tr><tbody id="onsiteRows"></tbody></table>
           <div class="sectionTools"><button onclick="addOnsiteNote()">Add onsite note</button></div>
@@ -1911,7 +1933,8 @@
       });
     }
 
-    function showPage(id, button) {
+    function showPage(id, button, updateHash = true) {
+      if (!document.getElementById(id)?.classList.contains("page")) id = "dashboard";
       document.body.dataset.page = id;
       document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
       document.getElementById(id).classList.add("active");
@@ -1928,8 +1951,34 @@
       };
       pageTitle.textContent = titles[id][0];
       pageSubtitle.textContent = titles[id][1];
-      history.replaceState(null, "", "#" + id);
+      if (updateHash) history.replaceState(null, "", "#" + id);
       searchPortal(portalSearch?.value || "");
+    }
+    function routeFromHash() {
+      const target = location.hash?.replace("#", "");
+      if (!target) return false;
+      if (target.startsWith("resort-")) {
+        showPage("resort", null, false);
+        setResortView(target.replace("resort-", ""), null, false);
+        return true;
+      }
+      if (target === "shoppingWrap") {
+        showPage("packing", null, false);
+        setPackingView("shopping", null, false);
+        requestAnimationFrame(() => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" }));
+        return true;
+      }
+      if (target === "peopleWrap" || target === "sharedWrap" || target === "packingTabs") {
+        showPage("packing", null, false);
+        setPackingView("list", null, false);
+        requestAnimationFrame(() => document.getElementById(target)?.scrollIntoView({ behavior: "smooth", block: "start" }));
+        return true;
+      }
+      if (document.getElementById(target)?.classList.contains("page")) {
+        showPage(target, null, false);
+        return true;
+      }
+      return false;
     }
     function openAction(action) {
       const go = (page, id) => {
@@ -1957,10 +2006,27 @@
         return;
       }
       if (action === "weather") {
-        go("resort", "resort-weather");
+        showPage("resort");
+        setResortView("weather");
         return;
       }
       go("dashboard", "readinessRows");
+    }
+
+    function setResortView(view = "overview", button, shouldJump = true) {
+      const resortEl = document.getElementById("resort");
+      if (!resortEl) return;
+      const valid = ["overview", "weather", "dining", "pools", "kids", "rooms", "notes"];
+      const nextView = valid.includes(view) ? view : "overview";
+      resortEl.dataset.resortView = nextView;
+      document.querySelectorAll(".resortJumpMenu [data-resort-view]").forEach(b => {
+        b.classList.toggle("active", b.dataset.resortView === nextView);
+      });
+      if (button) button.classList.add("active");
+      searchPortal(portalSearch?.value || "");
+      if (shouldJump) {
+        requestAnimationFrame(() => document.querySelector(".resortJumpMenu")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      }
     }
 
     function toggleMobileMenu() {
@@ -2064,16 +2130,17 @@
       bindAutosave();
       updateMetrics();
     }
-    function setShoppingFilter(filter, button) {
+    function setShoppingFilter(filter, button, shouldJump = true) {
       collectAll();
       shoppingFilter = filter;
+      setPackingView("shopping", null, false);
       document.querySelectorAll("[data-shop-filter]").forEach(b => b.classList.toggle("active", b.dataset.shopFilter === filter));
       if (button) button.classList.add("active");
       renderShopping();
       bindAutosave();
       updateMetrics();
       shoppingWrap.open = true;
-      jumpToPackingTarget("shoppingWrap");
+      if (shouldJump) jumpToPackingTarget("shoppingWrap");
     }
     function sortPacking(kind, key, field) {
       collectAll();
@@ -2235,32 +2302,47 @@
       ].map(([label, value, cls]) => `<div class="focusTile"><span class="pill ${cls}">${label}</span><div class="big" style="font-size:20px;margin-top:8px">${value}</div></div>`).join("");
     }
 
-    function setPackingMode(mode, button) {
+    function setPackingView(view = "overview", button, shouldJump = true) {
       collectAll();
-      packingMode = mode === "shopping" ? "shopping" : "packing";
+      const packingEl = document.getElementById("packing");
+      if (!packingEl) return;
+      const nextView = ["overview", "list", "shopping"].includes(view) ? view : "overview";
+      packingEl.dataset.view = nextView;
+      packingMode = nextView === "shopping" ? "shopping" : "packing";
       packing.dataset.mode = packingMode;
-      document.querySelectorAll("[data-pack-mode]").forEach(b => b.classList.toggle("active", b.dataset.packMode === packingMode));
+      document.querySelectorAll("[data-pack-view]").forEach(b => b.classList.toggle("active", b.dataset.packView === nextView));
       if (button) button.classList.add("active");
-      if (packingMode === "shopping") {
+      if (nextView === "shopping") {
         shoppingWrap.open = true;
         document.querySelectorAll("[data-shop-filter]").forEach(b => b.classList.toggle("active", b.dataset.shopFilter === shoppingFilter));
         renderShopping();
         bindAutosave();
         updateMetrics();
-        jumpToPackingTarget("shoppingWrap");
-      } else {
+        if (shouldJump) jumpToPackingTarget("shoppingWrap");
+        return;
+      }
+      document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
+      document.querySelectorAll("#peopleWrap tr, #sharedWrap tr").forEach(row => row.classList.remove("hidden"));
+      if (nextView === "list") {
         if (activePackingFilter === "outstanding") showOutstandingOnly(null, false);
         else filterPacking(activePackingFilter, null, false);
-        jumpToPackingTarget("packing");
+        if (shouldJump) jumpToPackingTarget(activePackingFilter === "all" ? "peopleWrap" : "packingTabs");
+        return;
       }
+      document.querySelectorAll("[data-pack-filter]").forEach(b => b.classList.toggle("active", b.dataset.packFilter === activePackingFilter));
+      searchPortal(portalSearch?.value || "");
+      if (shouldJump) jumpToPackingTarget("packing");
+    }
+    function setPackingMode(mode, button) {
+      setPackingView(mode === "shopping" ? "shopping" : "list", button);
     }
     function filterPacking(type, button, shouldJump = true) {
       collectAll();
       activePackingFilter = type;
       packingMode = "packing";
       packing.dataset.mode = "packing";
-      document.querySelectorAll("[data-pack-mode]").forEach(b => b.classList.toggle("active", b.dataset.packMode === "packing"));
-      document.querySelectorAll("#packingTabs .packingModeOnly").forEach(b => b.classList.remove("active"));
+      packing.dataset.view = "list";
+      document.querySelectorAll("[data-pack-view]").forEach(b => b.classList.toggle("active", b.dataset.packView === "list"));
       document.querySelectorAll("[data-pack-filter]").forEach(b => b.classList.toggle("active", b.dataset.packFilter === type));
       if (button) button.classList.add("active");
       document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
@@ -2288,8 +2370,8 @@
       activePackingFilter = "outstanding";
       packingMode = "packing";
       packing.dataset.mode = "packing";
-      document.querySelectorAll("[data-pack-mode]").forEach(b => b.classList.toggle("active", b.dataset.packMode === "packing"));
-      document.querySelectorAll("#packingTabs .packingModeOnly").forEach(b => b.classList.remove("active"));
+      packing.dataset.view = "list";
+      document.querySelectorAll("[data-pack-view]").forEach(b => b.classList.toggle("active", b.dataset.packView === "list"));
       document.querySelectorAll("[data-pack-filter]").forEach(b => b.classList.toggle("active", b.dataset.packFilter === "outstanding"));
       if (button) button.classList.add("active");
       document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
@@ -2376,8 +2458,8 @@
         document.querySelectorAll(".headerMenu").forEach(menu => menu.open = false);
       }
     });
-    const initial = location.hash?.replace("#", "");
-    if (initial && document.getElementById(initial)) showPage(initial);
+    routeFromHash();
+    window.addEventListener("hashchange", routeFromHash);
   </script>
 </body>
 </html>
