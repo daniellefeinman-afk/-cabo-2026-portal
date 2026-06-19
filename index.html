@@ -124,28 +124,39 @@
       top: 0;
       z-index: 30;
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-      padding: 12px 18px 10px;
-      background:
-        linear-gradient(135deg, rgba(16, 42, 67, 0.98), rgba(14, 82, 88, 0.96));
-      color: #fff;
-      box-shadow: 0 10px 28px rgba(16, 42, 67, 0.18);
+      grid-template-columns: auto minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      padding: 10px 18px;
+      border-bottom: 1px solid rgba(216, 224, 234, 0.9);
+      background: rgba(255, 255, 255, 0.93);
+      color: var(--ink);
+      box-shadow: 0 8px 24px rgba(16, 42, 67, 0.1);
       backdrop-filter: blur(12px);
     }
-    .topBar,
+    :root[data-theme="dark"] .appTop {
+      background: rgba(17, 29, 43, 0.94);
+      border-color: var(--line);
+    }
+    .topBar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      min-width: 0;
+    }
     .navBar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 14px;
+      gap: 12px;
       min-width: 0;
     }
     .brand {
       display: inline-flex;
       gap: 10px;
       align-items: center;
-      color: #fff;
+      color: var(--ink);
       text-decoration: none;
     }
     .brandMark {
@@ -154,16 +165,16 @@
       height: 34px;
       place-items: center;
       padding: 0 10px;
-      border: 1px solid rgba(255, 255, 255, 0.24);
+      border: 1px solid rgba(15, 118, 110, 0.28);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.12);
-      color: #fff;
+      background: rgba(15, 118, 110, 0.1);
+      color: var(--teal);
       font-size: 12px;
       font-weight: 950;
       letter-spacing: 0;
     }
     .brandText strong { display: block; font-size: 15px; line-height: 1.1; }
-    .brandText span { display: block; color: #cfe5f4; font-size: 12px; font-weight: 700; }
+    .brandText span { display: block; color: var(--muted); font-size: 12px; font-weight: 700; }
     .mobileMenuButton { display: none; }
     .topNav, .actions, .filters, .tabs {
       display: flex;
@@ -175,31 +186,32 @@
       justify-content: flex-start;
       min-width: 0;
       padding: 4px;
-      border: 1px solid rgba(255, 255, 255, 0.16);
+      border: 1px solid var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.08);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      background: rgba(244, 247, 251, 0.92);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.68);
     }
     .topNav button {
       min-height: 34px;
       padding: 6px 12px;
       border-color: transparent;
       background: transparent;
-      color: #d7e8f6;
+      color: var(--muted);
       white-space: nowrap;
       box-shadow: none;
     }
     .topNav button:hover {
       transform: none;
       box-shadow: none;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(15, 118, 110, 0.08);
     }
     .topNav button.active {
-      background: #fff;
+      border: 1px solid rgba(251, 191, 36, 0.45);
+      background: #fff7dc;
       color: var(--navy);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18);
+      box-shadow: 0 8px 20px rgba(16, 42, 67, 0.14);
     }
-    .topNav button.active:hover { background: #fff; }
+    .topNav button.active:hover { background: #fff7dc; }
     .utilityCluster {
       position: relative;
       display: flex;
@@ -209,16 +221,16 @@
       min-width: 0;
     }
     .findBox {
-      width: clamp(180px, 22vw, 300px);
+      width: clamp(150px, 14vw, 200px);
       min-height: 34px;
-      border-color: rgba(255, 255, 255, 0.28);
+      border-color: var(--line);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.13);
-      color: #fff;
+      background: var(--paper);
+      color: var(--ink);
       padding: 6px 12px;
       font-weight: 750;
     }
-    .findBox::placeholder { color: rgba(255, 255, 255, 0.74); }
+    .findBox::placeholder { color: var(--muted); }
     .headerButton,
     .headerMenu > summary,
     .headerMenu button {
@@ -229,9 +241,9 @@
       min-height: 36px;
       height: 36px;
       padding: 0 11px;
-      border-color: rgba(255, 255, 255, 0.22);
-      background: rgba(255, 255, 255, 0.1);
-      color: #fff;
+      border-color: var(--line);
+      background: var(--paper);
+      color: var(--navy);
     }
     .headerMenu {
       position: relative;
@@ -245,14 +257,14 @@
     .headerMenu > summary {
       height: 36px;
       align-items: center;
-      border: 1px solid rgba(255, 255, 255, 0.22);
+      border: 1px solid var(--line);
       border-radius: 999px;
       list-style: none;
       white-space: nowrap;
     }
     .headerMenu[open] > summary {
-      background: #fff;
-      color: var(--navy);
+      background: var(--navy);
+      color: #fff;
     }
     .menuPanel {
       position: absolute;
@@ -333,8 +345,8 @@
       min-height: 34px;
       padding: 5px 11px;
       border-radius: 999px;
-      background: #fff;
-      color: #102a43;
+      background: var(--navy);
+      color: #fff;
       font-weight: 950;
       white-space: nowrap;
     }
@@ -402,6 +414,13 @@
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+    .metricButton {
+      cursor: pointer;
+      text-align: left;
+    }
+    .metricButton:hover {
+      background: rgba(15, 118, 110, 0.07);
     }
     .heroBand {
       display: grid;
@@ -678,6 +697,14 @@
       gap: 8px;
     }
     .weatherDay .temp { font-size: 18px; }
+    .dashboardWeather {
+      margin-bottom: 12px;
+      border-top: 4px solid var(--gold);
+    }
+    .dashboardWeatherGrid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-top: 8px;
+    }
     .sourceNote {
       margin: 10px 0 0;
       padding-top: 8px;
@@ -741,6 +768,57 @@
     }
     .ownerTile strong,
     .zoneTile strong { color: var(--navy); display: block; margin-bottom: 6px; }
+    #packing[data-mode="shopping"] .packingModeOnly,
+    #packing[data-mode="packing"] .shoppingModeOnly {
+      display: none !important;
+    }
+    .modeSwitch {
+      display: inline-flex;
+      gap: 4px;
+      padding: 4px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--wash);
+    }
+    .modeSwitch button {
+      border-color: transparent;
+      background: transparent;
+    }
+    .modeSwitch button.active {
+      background: var(--navy);
+      color: #fff;
+      border-color: var(--navy);
+    }
+    .shoppingToolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      align-items: center;
+      margin-bottom: 10px;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255, 247, 220, 0.68), var(--paper));
+    }
+    :root[data-theme="dark"] .shoppingToolbar {
+      background: linear-gradient(180deg, rgba(63, 47, 18, 0.6), var(--paper));
+    }
+    .sortHead {
+      min-height: 0;
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: inherit;
+      box-shadow: none;
+      font: inherit;
+      text-transform: inherit;
+    }
+    .sortHead:hover {
+      transform: none;
+      box-shadow: none;
+      text-decoration: underline;
+    }
     .tinyBar {
       height: 7px;
       overflow: hidden;
@@ -894,7 +972,7 @@
     }
 
     @media (max-width: 1120px) {
-      .appTop { position: static; }
+      .appTop { position: static; grid-template-columns: 1fr; }
       .topBar, .navBar { align-items: flex-start; }
       .navBar { flex-direction: column; }
       .topNav, .utilityCluster { justify-content: flex-start; overflow-x: auto; flex-wrap: nowrap; padding-bottom: 3px; width: 100%; }
@@ -922,13 +1000,13 @@
       .grid { grid-template-columns: repeat(6, minmax(0, 1fr)); }
       .span12, .span8, .span7, .span6, .span5, .span4, .span3 { grid-column: span 6; }
       .restaurant { grid-template-columns: 1fr; }
-      .weatherGrid, .seatGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .weatherGrid, .seatGrid, .dashboardWeatherGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .commandGrid, .focusRail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .ownerSummary, .zoneSummary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .resortMap { grid-template-columns: 1fr; }
       .decisionMatrix { grid-template-columns: 1fr; }
     }
-    @media (max-width: 680px) {
+    @media (max-width: 820px) {
       body { padding-bottom: 72px; }
       .wrap { padding: 12px; }
       .appTop { padding: 10px 12px; }
@@ -945,21 +1023,28 @@
         padding: 0;
         align-items: center;
         justify-content: center;
-        border-color: rgba(255, 255, 255, 0.24);
-        background: rgba(255, 255, 255, 0.1);
-        color: #fff;
+        border-color: var(--line);
+        background: var(--paper);
+        color: var(--navy);
       }
       .navBar { gap: 8px; }
       .topNav { display: none; }
       .metricsStrip { position: static; grid-template-columns: 1fr; }
       .pageHeader { position: static; }
-      .stickySubTabs { position: sticky; top: 0; }
+      .stickySubTabs {
+        position: sticky;
+        top: 0;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        scrollbar-width: thin;
+      }
+      .stickySubTabs .spacer { display: none; }
       .linkGrid, .quickGrid { grid-template-columns: 1fr; }
       .heroCopy { min-height: 220px; padding: 18px; }
       .statusPanel { padding: 12px; }
       .grid { grid-template-columns: 1fr; }
       .span12, .span8, .span7, .span6, .span5, .span4, .span3 { grid-column: span 1; }
-      .weatherGrid, .seatGrid { grid-template-columns: 1fr; }
+      .weatherGrid, .seatGrid, .dashboardWeatherGrid { grid-template-columns: 1fr; }
       table { display: block; overflow-x: auto; white-space: nowrap; }
       th, td { min-width: 130px; }
       .timeline { grid-template-columns: 88px 1fr; }
@@ -1092,8 +1177,7 @@
   <header class="appTop">
     <div class="topBar">
       <a class="brand" href="#dashboard" onclick="showPage('dashboard')">
-        <span class="brandMark">CABO</span>
-        <span class="brandText"><strong>Cabo 2026</strong><span>Jun 27 - Jul 3</span></span>
+        <span class="brandText"><strong>Cabo 2026</strong><span>Jun 27 - Jul 3 | Garza Blanca</span></span>
       </a>
       <span class="dayChip"><span id="daysLeftChip">0</span>days to go</span>
       <button class="mobileMenuButton" onclick="toggleMobileMenu()" aria-label="Open menu" aria-controls="mobileDrawer">
@@ -1177,11 +1261,11 @@
 
   <main class="wrap">
     <section class="metricsStrip" aria-label="Trip metrics">
-      <div class="metricTile"><span class="kpi">Readiness</span><strong id="readinessMetric">0%</strong><span class="small">Weighted operations score</span></div>
-      <div class="metricTile"><span class="kpi">Packed</span><strong id="packingMetric">0%</strong><span class="small" id="packedMiniMetric">0/0 complete</span></div>
-      <div class="metricTile"><span class="kpi">Critical</span><strong id="criticalMetric">0</strong><span class="small">Needs attention</span></div>
-      <div class="metricTile"><span class="kpi">Shopping</span><strong id="shoppingMetric">0</strong><span class="small">Open procurement rows</span></div>
-      <div class="metricTile"><span class="kpi">Transfers</span><strong id="transferMetric">Pending</strong><span class="small">Andrea details needed</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('readiness')" onkeydown="activateFromKey(event, () => openAction('readiness'))"><span class="kpi">Readiness</span><strong id="readinessMetric">0%</strong><span class="small">Weighted operations score</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><span class="kpi">Packed</span><strong id="packingMetric">0%</strong><span class="small" id="packedMiniMetric">0/0 complete</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('critical')" onkeydown="activateFromKey(event, () => openAction('critical'))"><span class="kpi">Critical</span><strong id="criticalMetric">0</strong><span class="small">Needs attention</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('shopping-open')" onkeydown="activateFromKey(event, () => openAction('shopping-open'))"><span class="kpi">Shopping</span><strong id="shoppingMetric">0</strong><span class="small">Open procurement rows</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('transfers')" onkeydown="activateFromKey(event, () => openAction('transfers'))"><span class="kpi">Transfers</span><strong id="transferMetric">Pending</strong><span class="small">Andrea details needed</span></div>
     </section>
 
     <section class="heroBand" aria-labelledby="portalTitle">
@@ -1234,7 +1318,7 @@
           <span class="tag">Packing push</span>
           <strong>Work from essentials to suitcases.</strong>
           <p class="small">Clear open purchases first, then use the outstanding filter to pack by person and lane.</p>
-          <button onclick="showPage('packing')">Open Packing</button>
+          <button onclick="openAction('shopping-open')">Open Shopping</button>
         </article>
         <article class="actionCard resort">
           <span class="tag">Resort setup</span>
@@ -1242,6 +1326,16 @@
           <p class="small">Rooms, dining rules, Kids Club signup, towels, and cabanas are the first-hour questions.</p>
           <button onclick="showPage('resort')">Open Resort</button>
         </article>
+      </div>
+      <div class="card dashboardWeather span12" id="dashboard-weather">
+        <div class="sectionTools" style="justify-content:space-between;margin:0 0 8px">
+          <div>
+            <h3 style="margin:0">Weather</h3>
+            <div class="small">Cabo trip window, compact resort planning view.</div>
+          </div>
+          <button onclick="openAction('weather')">Open Resort Weather</button>
+        </div>
+        <div class="weatherGrid dashboardWeatherGrid" id="dashboardWeatherGrid"></div>
       </div>
       <div class="grid">
         <div class="card softBlue span3"><div class="kpi">Trip Length</div><div class="big" style="font-size:22px">6 nights</div><div class="small">7 calendar days, including 5 full resort days.</div></div>
@@ -1318,60 +1412,79 @@
       </div>
     </section>
 
-    <section id="packing" class="page">
+    <section id="packing" class="page" data-mode="packing">
       <div class="stickySubTabs" id="packingTabs">
-        <button class="active" onclick="filterPacking('all', this)">All</button>
-        <button onclick="filterPacking('kids', this)">Kids</button>
-        <button onclick="filterPacking('adults', this)">Adults</button>
-        <button onclick="filterPacking('pool', this)">Pool + Beach</button>
-        <button onclick="filterPacking('toiletries', this)">Toiletries</button>
-        <button onclick="filterPacking('travel', this)">Travel Day</button>
-        <button onclick="filterPacking('room', this)">Room Setup</button>
-        <button onclick="filterPacking('shopping', this)">Shopping</button>
-        <button onclick="showOutstandingOnly(this)">Outstanding</button>
+        <span class="modeSwitch" aria-label="Packing workspace mode">
+          <button class="active" data-pack-mode="packing" onclick="setPackingMode('packing', this)">Packing</button>
+          <button data-pack-mode="shopping" onclick="setPackingMode('shopping', this)">Shopping</button>
+        </span>
+        <button class="active packingModeOnly" data-pack-filter="all" onclick="filterPacking('all', this)">All</button>
+        <button class="packingModeOnly" data-pack-filter="kids" onclick="filterPacking('kids', this)">Kids</button>
+        <button class="packingModeOnly" data-pack-filter="adults" onclick="filterPacking('adults', this)">Adults</button>
+        <button class="packingModeOnly" data-pack-filter="pool" onclick="filterPacking('pool', this)">Pool + Beach</button>
+        <button class="packingModeOnly" data-pack-filter="toiletries" onclick="filterPacking('toiletries', this)">Toiletries</button>
+        <button class="packingModeOnly" data-pack-filter="travel" onclick="filterPacking('travel', this)">Travel Day</button>
+        <button class="packingModeOnly" data-pack-filter="room" onclick="filterPacking('room', this)">Room Setup</button>
+        <button class="packingModeOnly" data-pack-filter="outstanding" onclick="showOutstandingOnly(this)">Outstanding</button>
+        <button class="shoppingModeOnly active" data-shop-filter="open" onclick="setShoppingFilter('open', this)">Open</button>
+        <button class="shoppingModeOnly" data-shop-filter="needs-order" onclick="setShoppingFilter('needs-order', this)">Needs order</button>
+        <button class="shoppingModeOnly" data-shop-filter="ordered" onclick="setShoppingFilter('ordered', this)">Ordered</button>
+        <button class="shoppingModeOnly" data-shop-filter="delivered" onclick="setShoppingFilter('delivered', this)">Delivered</button>
+        <button class="shoppingModeOnly" data-shop-filter="packed" onclick="setShoppingFilter('packed', this)">Packed</button>
+        <button class="shoppingModeOnly" data-shop-filter="decision" onclick="setShoppingFilter('decision', this)">Decisions</button>
+        <button class="shoppingModeOnly" data-shop-filter="all" onclick="setShoppingFilter('all', this)">All</button>
         <span class="spacer"></span>
-        <button onclick="expandPacking()">Expand all</button>
-        <button onclick="collapsePacking()">Collapse all</button>
+        <button class="packingModeOnly" onclick="expandPacking()">Expand all</button>
+        <button class="packingModeOnly" onclick="collapsePacking()">Collapse all</button>
       </div>
 
       <div class="grid">
-        <div class="card softBlue span3"><div class="kpi">Overall Packed</div><div class="big" id="overallPacked">0%</div><div class="bar"><div id="overallPackedBar"></div></div></div>
+        <div class="card softBlue span3 metricButton" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><div class="kpi">Overall Packed</div><div class="big" id="overallPacked">0%</div><div class="bar"><div id="overallPackedBar"></div></div></div>
         <div class="card span3"><div class="kpi">Packed Items</div><div class="big" id="packedItems">0/0</div></div>
-        <div class="card softAmber span3"><div class="kpi">Outstanding</div><div class="big" id="outstandingItems">0</div></div>
-        <div class="card span3"><div class="kpi">Shopping Open</div><div class="big" id="shoppingOpen">0</div></div>
+        <div class="card softAmber span3 metricButton" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><div class="kpi">Outstanding</div><div class="big" id="outstandingItems">0</div></div>
+        <div class="card span3 metricButton" role="button" tabindex="0" onclick="openAction('shopping-open')" onkeydown="activateFromKey(event, () => openAction('shopping-open'))"><div class="kpi">Shopping Open</div><div class="big" id="shoppingOpen">0</div></div>
 
-        <div class="card span6">
+        <div class="card span6 packingModeOnly">
           <h3>Suitcase Readiness</h3>
           <div class="ownerSummary" id="packingOwnerSummary"></div>
         </div>
-        <div class="card span6">
+        <div class="card span6 packingModeOnly">
           <h3>Shared Lane Readiness</h3>
           <div class="zoneSummary" id="packingZoneSummary"></div>
         </div>
 
-        <div class="card span12">
+        <div class="card span12 packingModeOnly">
           <h3>Packing Workbench</h3>
           <div id="nextPackingActions" class="decisionMatrix" style="margin-bottom:12px"></div>
           <div class="linkGrid">
             <a href="#peopleWrap">People <span>clothes + shoes</span></a>
             <a href="#sharedWrap">Shared <span>pool, travel, room</span></a>
-            <a href="#shoppingWrap">Shopping <span>open purchases</span></a>
+            <a href="#shoppingWrap" onclick="setPackingMode('shopping')">Shopping <span>open purchases</span></a>
           </div>
         </div>
 
-        <div class="card span12" id="peopleWrap">
+        <div class="card span12 packingModeOnly" id="peopleWrap">
           <h3>Per-Person Packing</h3>
           <div id="personCards" class="grid"></div>
         </div>
-        <div class="card span12" id="sharedWrap">
+        <div class="card span12 packingModeOnly" id="sharedWrap">
           <h3>Shared Packing Sections</h3>
           <div id="sharedSections"></div>
         </div>
-        <details class="card span12 shoppingPanel" id="shoppingWrap">
+        <div class="card span12 shoppingModeOnly">
+          <h3>Shopping Command</h3>
+          <div class="shoppingToolbar">
+            <span class="pill warn" id="shoppingCommandStatus">Open items</span>
+            <button onclick="setShoppingFilter('needs-order')">Show needs order</button>
+            <button onclick="setShoppingFilter('decision')">Show decisions</button>
+            <button onclick="addShopItem()">Add shopping item</button>
+          </div>
+          <p class="small">Use the status chips above or the column headers below to sort and isolate what still needs to be ordered, delivered, or packed.</p>
+        </div>
+        <details class="card span12 shoppingPanel shoppingModeOnly" id="shoppingWrap" open>
           <summary>Shopping + Procurement <span class="pill warn" id="shoppingPanelStatus">Open items</span></summary>
           <div class="inner">
-            <p class="small">Procurement is editable here, but keeping it collapsed makes the actual packing lanes easier to work through.</p>
-            <div class="tableWrap"><table><tr><th>Item</th><th>Qty</th><th>Owner</th><th>Category</th><th>Ordered</th><th>Delivered</th><th>Packed</th><th>Notes</th><th></th></tr><tbody id="shopRows"></tbody></table></div>
+            <div class="tableWrap"><table><tr><th><button class="sortHead" onclick="sortShopping('item')">Item</button></th><th><button class="sortHead" onclick="sortShopping('qty')">Qty</button></th><th><button class="sortHead" onclick="sortShopping('owner')">Owner</button></th><th><button class="sortHead" onclick="sortShopping('category')">Category</button></th><th><button class="sortHead" onclick="sortShopping('ordered')">Ordered</button></th><th><button class="sortHead" onclick="sortShopping('delivered')">Delivered</button></th><th><button class="sortHead" onclick="sortShopping('packed')">Packed</button></th><th><button class="sortHead" onclick="sortShopping('notes')">Notes</button></th><th></th></tr><tbody id="shopRows"></tbody></table></div>
             <div class="sectionTools"><button onclick="addShopItem()">Add shopping item</button></div>
           </div>
         </details>
@@ -1435,6 +1548,18 @@
       </div>
 
       <div class="grid">
+        <div class="card span12" id="resort-weather">
+          <h3>Weather</h3>
+          <div class="grid">
+            <div class="card compact span3"><span class="pill ok">Trip Signal</span><h4>Pool-first weather</h4><div class="small">Warm, dry, sun-heavy pattern.</div></div>
+            <div class="card compact span3"><span class="pill bad">UV Signal</span><h4>High sun exposure</h4><div class="small">Hats, rash guards, and sunscreen volume matter.</div></div>
+            <div class="card compact span3"><span class="pill info">Evenings</span><h4>Warm lows</h4><div class="small">Light layers only; no bulky jackets.</div></div>
+            <div class="card compact span3"><span class="pill warn">Beach</span><h4>Daily wind check</h4><div class="small">Pool remains the default operating base.</div></div>
+          </div>
+          <div class="weatherGrid" id="weatherGrid" style="margin-top:12px"></div>
+          <p class="sourceNote">Forecast values are from the Cabo resort hub snapshot dated June 18, 2026. Refresh again inside the final week before travel and on beach days.</p>
+        </div>
+
         <div class="card span7" id="resort-dining">
           <h3>Dining Board</h3>
           <div class="decisionMatrix" style="margin-bottom:12px">
@@ -1485,18 +1610,6 @@
             <tr><td>Danielle Family</td><td>King + Sofa Bed + Double Queen</td><td>Parents / Levon: diapers, wipes, meds, bedtime basics. Girls room: brush, hair ties, detangler, toothbrushes. Shared ops: laundry bags, hooks, clothesline, shoe bags.</td></tr>
           </table>
           <p class="sourceNote">Known: no connecting rooms. Resort will try proximity. Room numbers and proximity are check-in issues.</p>
-        </div>
-
-        <div class="card span12" id="resort-weather">
-          <h3>Weather</h3>
-          <div class="grid">
-            <div class="card compact span3"><span class="pill ok">Trip Signal</span><h4>Pool-first weather</h4><div class="small">Warm, dry, sun-heavy pattern.</div></div>
-            <div class="card compact span3"><span class="pill bad">UV Signal</span><h4>High sun exposure</h4><div class="small">Hats, rash guards, and sunscreen volume matter.</div></div>
-            <div class="card compact span3"><span class="pill info">Evenings</span><h4>Warm lows</h4><div class="small">Light layers only; no bulky jackets.</div></div>
-            <div class="card compact span3"><span class="pill warn">Beach</span><h4>Daily wind check</h4><div class="small">Pool remains the default operating base.</div></div>
-          </div>
-          <div class="weatherGrid" id="weatherGrid" style="margin-top:12px"></div>
-          <p class="sourceNote">Forecast values are from the Cabo resort hub snapshot dated June 18, 2026. Refresh again inside the final week before travel and on beach days.</p>
         </div>
 
         <div class="card span12">
@@ -1577,6 +1690,10 @@
     const THEME_KEY = "caboPortal_theme";
     let activeTripDay = "outbound";
     let activeFlight = "outbound";
+    let packingMode = "packing";
+    let activePackingFilter = "all";
+    let shoppingFilter = "open";
+    let shoppingSort = { field: "status", dir: "asc" };
 
     const defaults = {
       checks: {},
@@ -1682,6 +1799,12 @@
     function sectionName(key) {
       return { pool: "Pool + Beach", toiletries: "Toiletries", travel: "Travel Day", room: "Room Setup" }[key] || key;
     }
+    function activateFromKey(event, action) {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        action();
+      }
+    }
     function applyTheme(theme) {
       const next = theme === "dark" ? "dark" : "light";
       document.documentElement.dataset.theme = next;
@@ -1757,6 +1880,37 @@
       history.replaceState(null, "", "#" + id);
       searchPortal(portalSearch?.value || "");
     }
+    function openAction(action) {
+      const go = (page, id) => {
+        showPage(page);
+        requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      };
+      if (action === "shopping-open") {
+        showPage("packing");
+        setPackingMode("shopping");
+        setShoppingFilter("open");
+        return;
+      }
+      if (action === "packing-outstanding") {
+        showPage("packing");
+        setPackingMode("packing");
+        showOutstandingOnly();
+        return;
+      }
+      if (action === "critical") {
+        go("dashboard", "focusRail");
+        return;
+      }
+      if (action === "transfers") {
+        go("travel", "tripdayCard");
+        return;
+      }
+      if (action === "weather") {
+        go("resort", "resort-weather");
+        return;
+      }
+      go("dashboard", "readinessRows");
+    }
 
     function toggleMobileMenu() {
       document.body.classList.toggle("drawerOpen");
@@ -1804,8 +1958,44 @@
       passengerRows.innerHTML = passengers.map(p => `<tr><td>${p[0]}</td><td>${p[1]}</td><td>${p[2]}</td><td>${p[3]}</td><td><span class="pill warn">Passport info needs attention</span></td></tr>`).join("");
     }
 
+    function shoppingStatus(row) {
+      if (row[6]) return "Packed";
+      if (row[5]) return "Delivered";
+      if (row[4]) return "Ordered";
+      if (String(row[3]).includes("Essential")) return "Needs order";
+      if (String(row[3]).includes("Decision") || row[3] === "Optional") return "Decision";
+      return "Needs order";
+    }
+    function shoppingMatches(row) {
+      const status = shoppingStatus(row);
+      if (shoppingFilter === "all") return true;
+      if (shoppingFilter === "open") return !(row[4] && row[5] && row[6]);
+      if (shoppingFilter === "needs-order") return !row[4];
+      if (shoppingFilter === "ordered") return row[4] && !row[5];
+      if (shoppingFilter === "delivered") return row[5] && !row[6];
+      if (shoppingFilter === "packed") return row[6];
+      if (shoppingFilter === "decision") return status === "Decision";
+      return true;
+    }
+    function valueForShopping(row, field) {
+      const map = { item: 0, qty: 1, owner: 2, category: 3, notes: 7 };
+      if (field === "ordered") return row[4] ? 1 : 0;
+      if (field === "delivered") return row[5] ? 1 : 0;
+      if (field === "packed") return row[6] ? 1 : 0;
+      if (field === "status") return ["Needs order", "Decision", "Ordered", "Delivered", "Packed"].indexOf(shoppingStatus(row));
+      return String(row[map[field]] ?? "").toLowerCase();
+    }
     function renderShopping() {
-      shopRows.innerHTML = data.shopping.map((r, i) => `<tr data-shopping-row="${i}"><td><input value="${esc(r[0])}" data-shop="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shop="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shop="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shop="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shop="${i}" data-f="4"></td><td><input type="checkbox" ${r[5] ? "checked" : ""} data-shop="${i}" data-f="5"></td><td><input type="checkbox" ${r[6] ? "checked" : ""} data-shop="${i}" data-f="6"></td><td><input value="${esc(r[7])}" data-shop="${i}" data-f="7"></td><td><button class="danger" onclick="deleteShopItem(${i})">Remove</button></td></tr>`).join("");
+      const rows = data.shopping
+        .map((row, index) => ({ row, index }))
+        .filter(entry => shoppingMatches(entry.row))
+        .sort((a, b) => {
+          const av = valueForShopping(a.row, shoppingSort.field);
+          const bv = valueForShopping(b.row, shoppingSort.field);
+          const result = av > bv ? 1 : av < bv ? -1 : a.index - b.index;
+          return shoppingSort.dir === "asc" ? result : -result;
+        });
+      shopRows.innerHTML = rows.length ? rows.map(({ row: r, index: i }) => `<tr data-shopping-row="${i}"><td><input value="${esc(r[0])}" data-shop="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shop="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shop="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shop="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shop="${i}" data-f="4"></td><td><input type="checkbox" ${r[5] ? "checked" : ""} data-shop="${i}" data-f="5"></td><td><input type="checkbox" ${r[6] ? "checked" : ""} data-shop="${i}" data-f="6"></td><td><input value="${esc(r[7])}" data-shop="${i}" data-f="7"><div class="small">${shoppingStatus(r)}</div></td><td><button class="danger" onclick="deleteShopItem(${i})">Remove</button></td></tr>`).join("") : `<tr><td colspan="9"><div class="emptyState">No shopping rows match this filter.</div></td></tr>`;
       shoppingMiniRows.innerHTML = data.shopping
         .filter(x => !x[4] || x[3].includes("Essential") || x[3].includes("Decision"))
         .slice(0, 8)
@@ -1815,18 +2005,49 @@
           return `<tr><td>${esc(r[0])}</td><td><span class="pill ${cls}">${label}</span></td></tr>`;
         }).join("");
     }
+    function sortShopping(field) {
+      collectAll();
+      shoppingSort = { field, dir: shoppingSort.field === field && shoppingSort.dir === "asc" ? "desc" : "asc" };
+      renderShopping();
+      bindAutosave();
+      updateMetrics();
+    }
+    function setShoppingFilter(filter, button) {
+      collectAll();
+      shoppingFilter = filter;
+      document.querySelectorAll("[data-shop-filter]").forEach(b => b.classList.toggle("active", b.dataset.shopFilter === filter));
+      if (button) button.classList.add("active");
+      renderShopping();
+      bindAutosave();
+      updateMetrics();
+      shoppingWrap.open = true;
+      jumpToPackingTarget("shoppingWrap");
+    }
+    function sortPacking(kind, key, field) {
+      collectAll();
+      const rows = kind === "person" ? data.people[key] : data.shared[key];
+      const boolFields = kind === "person" ? [3] : [4];
+      rows.sort((a, b) => {
+        const av = boolFields.includes(field) ? Number(a[field]) : String(a[field] ?? "").toLowerCase();
+        const bv = boolFields.includes(field) ? Number(b[field]) : String(b[field] ?? "").toLowerCase();
+        return av > bv ? 1 : av < bv ? -1 : 0;
+      });
+      renderAll();
+      if (activePackingFilter === "outstanding") showOutstandingOnly(null, false);
+      else filterPacking(activePackingFilter, null, false);
+    }
     function renderPeople() {
       personCards.innerHTML = Object.entries(data.people).map(([person, items]) => {
         const done = items.filter(i => i[3]).length;
         const pct = items.length ? Math.round((done / items.length) * 100) : 0;
-        return `<details class="person-card span6" data-type="${["Olive", "June", "Gibson", "Levon"].includes(person) ? "kids" : "adults"}" open><summary>${person}<span class="summaryMeta"><span class="pill neutral" id="${person}Stat">${done}/${items.length}</span><span class="small">${pct}%</span></span></summary><div class="inner"><div class="tinyBar"><span style="width:${pct}%"></span></div><div class="tableWrap" style="margin-top:10px"><table><tr><th>Category</th><th>Item</th><th>Qty</th><th>Packed</th><th>Notes</th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-person="${person}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-person="${person}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-person="${person}" data-i="${i}" data-f="2"></td><td><input type="checkbox" ${r[3] ? "checked" : ""} data-person="${person}" data-i="${i}" data-f="3"></td><td><input value="${esc(r[4])}" data-person="${person}" data-i="${i}" data-f="4"></td><td><button class="danger" onclick="deletePersonItem('${person}', ${i})">Remove</button></td></tr>`).join("")}</table></div><div class="sectionTools"><button onclick="addPersonItem('${person}')">Add item for ${person}</button></div></div></details>`;
+        return `<details class="person-card span6" data-type="${["Olive", "June", "Gibson", "Levon"].includes(person) ? "kids" : "adults"}" open><summary>${person}<span class="summaryMeta"><span class="pill neutral" id="${person}Stat">${done}/${items.length}</span><span class="small">${pct}%</span></span></summary><div class="inner"><div class="tinyBar"><span style="width:${pct}%"></span></div><div class="tableWrap" style="margin-top:10px"><table><tr><th><button class="sortHead" onclick="sortPacking('person', '${person}', 0)">Category</button></th><th><button class="sortHead" onclick="sortPacking('person', '${person}', 1)">Item</button></th><th><button class="sortHead" onclick="sortPacking('person', '${person}', 2)">Qty</button></th><th><button class="sortHead" onclick="sortPacking('person', '${person}', 3)">Packed</button></th><th><button class="sortHead" onclick="sortPacking('person', '${person}', 4)">Notes</button></th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-person="${person}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-person="${person}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-person="${person}" data-i="${i}" data-f="2"></td><td><input type="checkbox" ${r[3] ? "checked" : ""} data-person="${person}" data-i="${i}" data-f="3"></td><td><input value="${esc(r[4])}" data-person="${person}" data-i="${i}" data-f="4"></td><td><button class="danger" onclick="deletePersonItem('${person}', ${i})">Remove</button></td></tr>`).join("")}</table></div><div class="sectionTools"><button onclick="addPersonItem('${person}')">Add item for ${person}</button></div></div></details>`;
       }).join("");
     }
     function renderShared() {
       sharedSections.innerHTML = Object.entries(data.shared).map(([section, items]) => {
         const done = items.filter(i => i[4]).length;
         const pct = items.length ? Math.round((done / items.length) * 100) : 0;
-        return `<details class="shared-card" data-sharedsec="${section}" open><summary>${sectionName(section)}<span class="summaryMeta"><span class="pill neutral" id="${section}Stat">${done}/${items.length}</span><span class="small">${pct}%</span></span></summary><div class="inner"><div class="tinyBar"><span style="width:${pct}%"></span></div><div class="tableWrap" style="margin-top:10px"><table><tr><th>Category</th><th>Item</th><th>Qty</th><th>Owner</th><th>Packed</th><th>Notes</th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-shared="${section}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shared="${section}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shared="${section}" data-i="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shared="${section}" data-i="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shared="${section}" data-i="${i}" data-f="4"></td><td><input value="${esc(r[5])}" data-shared="${section}" data-i="${i}" data-f="5"></td><td><button class="danger" onclick="deleteSharedItem('${section}', ${i})">Remove</button></td></tr>`).join("")}</table></div><div class="sectionTools"><button onclick="addSharedItem('${section}')">Add ${sectionName(section)} item</button></div></div></details>`;
+        return `<details class="shared-card" data-sharedsec="${section}" open><summary>${sectionName(section)}<span class="summaryMeta"><span class="pill neutral" id="${section}Stat">${done}/${items.length}</span><span class="small">${pct}%</span></span></summary><div class="inner"><div class="tinyBar"><span style="width:${pct}%"></span></div><div class="tableWrap" style="margin-top:10px"><table><tr><th><button class="sortHead" onclick="sortPacking('shared', '${section}', 0)">Category</button></th><th><button class="sortHead" onclick="sortPacking('shared', '${section}', 1)">Item</button></th><th><button class="sortHead" onclick="sortPacking('shared', '${section}', 2)">Qty</button></th><th><button class="sortHead" onclick="sortPacking('shared', '${section}', 3)">Owner</button></th><th><button class="sortHead" onclick="sortPacking('shared', '${section}', 4)">Packed</button></th><th><button class="sortHead" onclick="sortPacking('shared', '${section}', 5)">Notes</button></th><th></th></tr>${items.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-shared="${section}" data-i="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shared="${section}" data-i="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shared="${section}" data-i="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shared="${section}" data-i="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shared="${section}" data-i="${i}" data-f="4"></td><td><input value="${esc(r[5])}" data-shared="${section}" data-i="${i}" data-f="5"></td><td><button class="danger" onclick="deleteSharedItem('${section}', ${i})">Remove</button></td></tr>`).join("")}</table></div><div class="sectionTools"><button onclick="addSharedItem('${section}')">Add ${sectionName(section)} item</button></div></div></details>`;
       }).join("");
     }
     function addPersonItem(person) { collectAll(); data.people[person].push(["Misc", "", "1", false, ""]); renderAll(); }
@@ -1841,7 +2062,7 @@
         const cls = r[1].includes("Lunch") || r[1].includes("Emergency") ? "ok" : r[1].includes("Adult") ? "warn" : "info";
         return `<div class="restaurant"><b>${r[0]}</b><span class="pill ${cls}">${r[1]}</span><span class="mealTime">${r[2]}</span><span class="mealNote">${r[3]}</span></div>`;
       }).join("")}</div>`;
-      weatherGrid.innerHTML = weatherRows.map(w => {
+      const weatherCards = weatherRows.map(w => {
         const icon = w[2] === "Refresh"
           ? `<svg class="iconSvg" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 8v5"></path><path d="M12 17h.01"></path><path d="M10.3 3.9 2.4 18a2 2 0 0 0 1.7 3h15.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"></path></svg>`
           : w[2] === "Partly"
@@ -1849,7 +2070,9 @@
             : `<svg class="iconSvg" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"></path></svg>`;
         const refresh = w[2] === "Refresh" ? " refresh" : "";
         return `<div class="weatherDay${refresh}"><div class="weatherTop"><div><div class="kpi">${w[0]}</div><h4>${w[1]}</h4></div><span class="weatherIcon">${icon}</span></div><div class="temp">${w[3]}</div><div class="small">${w[4]}</div></div>`;
-      }).join("");
+      });
+      weatherGrid.innerHTML = weatherCards.join("");
+      dashboardWeatherGrid.innerHTML = weatherCards.slice(0, 4).join("");
       poolToteRows.innerHTML = data.poolTote.map((r, i) => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td><input type="checkbox" ${r[2] ? "checked" : ""} data-pool-tote="${i}"></td></tr>`).join("");
       onsiteRows.innerHTML = data.onsite.map((r, i) => `<tr><td><input value="${esc(r[0])}" data-onsite="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-onsite="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-onsite="${i}" data-f="2"></td><td><input type="checkbox" ${r[3] ? "checked" : ""} data-onsite="${i}" data-f="3"></td><td><button class="danger" onclick="deleteOnsiteNote(${i})">Remove</button></td></tr>`).join("");
     }
@@ -1911,6 +2134,8 @@
       shopStatusText.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
       shoppingPanelStatus.textContent = shoppingOpenRows.length ? `${shoppingOpenRows.length} open` : "Clear";
       shoppingPanelStatus.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
+      shoppingCommandStatus.textContent = shoppingOpenRows.length ? `${shoppingOpenRows.length} open` : "Clear";
+      shoppingCommandStatus.className = "pill " + (shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok");
       packingOwnerSummary.innerHTML = peopleStats.map(([name, done, total]) => {
         const pct = total ? Math.round((done / total) * 100) : 0;
         return `<div class="ownerTile"><strong>${name}</strong><span class="small">${done}/${total} packed</span><div class="tinyBar"><span style="width:${pct}%"></span></div></div>`;
@@ -1958,50 +2183,69 @@
       ].map(([label, value, cls]) => `<div class="focusTile"><span class="pill ${cls}">${label}</span><div class="big" style="font-size:20px;margin-top:8px">${value}</div></div>`).join("");
     }
 
-    function filterPacking(type, button) {
+    function setPackingMode(mode, button) {
       collectAll();
-      document.querySelectorAll("#packingTabs button").forEach(b => b.classList.remove("active"));
+      packingMode = mode === "shopping" ? "shopping" : "packing";
+      packing.dataset.mode = packingMode;
+      document.querySelectorAll("[data-pack-mode]").forEach(b => b.classList.toggle("active", b.dataset.packMode === packingMode));
+      if (button) button.classList.add("active");
+      if (packingMode === "shopping") {
+        shoppingWrap.open = true;
+        document.querySelectorAll("[data-shop-filter]").forEach(b => b.classList.toggle("active", b.dataset.shopFilter === shoppingFilter));
+        renderShopping();
+        bindAutosave();
+        updateMetrics();
+        jumpToPackingTarget("shoppingWrap");
+      } else {
+        if (activePackingFilter === "outstanding") showOutstandingOnly(null, false);
+        else filterPacking(activePackingFilter, null, false);
+        jumpToPackingTarget("packing");
+      }
+    }
+    function filterPacking(type, button, shouldJump = true) {
+      collectAll();
+      activePackingFilter = type;
+      packingMode = "packing";
+      packing.dataset.mode = "packing";
+      document.querySelectorAll("[data-pack-mode]").forEach(b => b.classList.toggle("active", b.dataset.packMode === "packing"));
+      document.querySelectorAll("#packingTabs .packingModeOnly").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("[data-pack-filter]").forEach(b => b.classList.toggle("active", b.dataset.packFilter === type));
       if (button) button.classList.add("active");
       document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
-      shoppingWrap.classList.remove("hidden");
-      document.querySelectorAll("#peopleWrap tr, #sharedWrap tr, #shoppingWrap tr").forEach(row => row.classList.remove("hidden"));
+      document.querySelectorAll("#peopleWrap tr, #sharedWrap tr").forEach(row => row.classList.remove("hidden"));
       let target = "packing";
       if (type === "all") {
-        jumpToPackingTarget(target);
+        if (shouldJump) jumpToPackingTarget(target);
         return;
       }
       if (type === "kids" || type === "adults") {
         document.querySelectorAll(".person-card").forEach(c => c.classList.toggle("hidden", c.dataset.type !== type));
         document.querySelectorAll(".shared-card").forEach(c => c.classList.add("hidden"));
-        shoppingWrap.classList.add("hidden");
-        jumpToPackingTarget("peopleWrap");
+        if (shouldJump) jumpToPackingTarget("peopleWrap");
         return;
       }
       if (["pool", "toiletries", "travel", "room"].includes(type)) {
         document.querySelectorAll(".person-card").forEach(c => c.classList.add("hidden"));
         document.querySelectorAll(".shared-card").forEach(c => c.classList.toggle("hidden", c.dataset.sharedsec !== type));
-        shoppingWrap.classList.add("hidden");
-        jumpToPackingTarget("sharedWrap");
+        if (shouldJump) jumpToPackingTarget("sharedWrap");
         return;
       }
-      if (type === "shopping") {
-        shoppingWrap.open = true;
-        document.querySelectorAll(".person-card, .shared-card").forEach(c => c.classList.add("hidden"));
-        jumpToPackingTarget("shoppingWrap");
-      }
     }
-    function showOutstandingOnly(button) {
+    function showOutstandingOnly(button, shouldJump = true) {
       collectAll();
-      document.querySelectorAll("#packingTabs button").forEach(b => b.classList.remove("active"));
+      activePackingFilter = "outstanding";
+      packingMode = "packing";
+      packing.dataset.mode = "packing";
+      document.querySelectorAll("[data-pack-mode]").forEach(b => b.classList.toggle("active", b.dataset.packMode === "packing"));
+      document.querySelectorAll("#packingTabs .packingModeOnly").forEach(b => b.classList.remove("active"));
+      document.querySelectorAll("[data-pack-filter]").forEach(b => b.classList.toggle("active", b.dataset.packFilter === "outstanding"));
       if (button) button.classList.add("active");
       document.querySelectorAll(".person-card, .shared-card").forEach(el => el.classList.remove("hidden"));
-      shoppingWrap.classList.remove("hidden");
-      shoppingWrap.open = true;
-      document.querySelectorAll("#peopleWrap tr, #sharedWrap tr, #shoppingWrap tr").forEach(row => {
+      document.querySelectorAll("#peopleWrap tr, #sharedWrap tr").forEach(row => {
         const boxes = [...row.querySelectorAll('input[type="checkbox"]')];
         if (boxes.length) row.classList.toggle("hidden", boxes.every(box => box.checked));
       });
-      jumpToPackingTarget("peopleWrap");
+      if (shouldJump) jumpToPackingTarget("peopleWrap");
     }
     function jumpToPackingTarget(id) {
       requestAnimationFrame(() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" }));
