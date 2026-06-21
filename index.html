@@ -426,6 +426,7 @@
     :root[data-theme="dark"] .statusPanel {
       background: rgba(17, 29, 43, 0.92);
     }
+    body:not([data-page="dashboard"]) .metricsStrip { display: none; }
     .metricTile {
       display: grid;
       grid-template-columns: auto auto;
@@ -692,6 +693,17 @@
     .seatGrid, .weatherGrid {
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .travelSummaryGrid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .travelPrepGrid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
     .weatherGrid { grid-template-columns: repeat(7, minmax(0, 1fr)); }
@@ -1045,7 +1057,7 @@
       top: 0;
       z-index: 18;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: nowrap;
       gap: 6px;
       align-items: center;
       margin-bottom: 10px;
@@ -1055,12 +1067,18 @@
       background: rgba(255, 255, 255, 0.92);
       box-shadow: 0 12px 24px rgba(0, 95, 115, 0.08);
       backdrop-filter: blur(14px);
+      overflow-x: auto;
+      scrollbar-width: none;
     }
+    .stickySubTabs::-webkit-scrollbar { display: none; }
     .stickySubTabs button,
     .stickySubTabs .tag {
+      flex: 0 0 auto;
       min-height: 31px;
       padding: 4px 9px;
       font-size: 12px;
+      line-height: 1.2;
+      white-space: nowrap;
     }
     .stickySubTabs button.active,
     .stickySubTabs .tag.active {
@@ -1162,6 +1180,7 @@
       .span12, .span8, .span7, .span6, .span5, .span4, .span3 { grid-column: span 6; }
       .restaurant { grid-template-columns: 1fr; }
       .weatherGrid, .seatGrid, .dashboardWeatherGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .travelSummaryGrid, .travelPrepGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .commandGrid, .focusRail { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .ownerSummary, .zoneSummary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .resortOverviewGrid { grid-template-columns: 1fr; }
@@ -1196,12 +1215,16 @@
       .stickySubTabs {
         position: sticky;
         top: 0;
-        flex-wrap: nowrap;
         overflow-x: auto;
         scrollbar-width: thin;
       }
+      .stickySubTabs button,
+      .stickySubTabs .tag {
+        min-height: 34px;
+        padding: 6px 10px;
+      }
       .stickySubTabs .spacer { display: none; }
-      .linkGrid, .quickGrid, .resortTileGrid { grid-template-columns: 1fr; }
+      .linkGrid, .quickGrid, .resortTileGrid, .travelSummaryGrid, .travelPrepGrid { grid-template-columns: 1fr; }
       .mapEmbed { height: 260px; }
       .heroCopy { min-height: 220px; padding: 18px; }
       .statusPanel { min-height: 260px; padding: 12px; }
@@ -1362,7 +1385,6 @@
             <input class="findBox" id="portalSearch" type="search" placeholder="Find anything" aria-label="Find portal content" oninput="searchPortal(this.value)">
             <div class="menuLabel">Portal</div>
             <button onclick="showPage('sources')">Sources + live links</button>
-            <button onclick="saveAll()">Save changes</button>
             <button onclick="syncNow()">Sync now</button>
             <button onclick="exportData()">Export data</button>
             <button onclick="document.getElementById('importFile').click()">Import data</button>
@@ -1375,14 +1397,12 @@
             <div class="menuLabel">Resort</div>
             <a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Garza Blanca <span>Open</span></a>
             <div class="menuLabel">Friday Lee</div>
-            <a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Firehouse <span>Open</span></a>
-            <a target="_blank" rel="noreferrer" href="https://www.campbowwow.com/austin/services-pricing/dog-boarding/">Camp Bow Wow <span>Open</span></a>
             <a target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/services/boarding">PetSuites <span>Open</span></a>
           </div>
         </details>
         <input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)">
         <span class="syncStatus syncing" id="syncStatus" title="Cloud save status">Connecting</span>
-        <button class="openItemsButton" onclick="openAction('shopping-open')">Open Items</button>
+        <button class="openItemsButton" onclick="openAction('action-items')">Action Items</button>
       </div>
     </div>
   </header>
@@ -1405,7 +1425,7 @@
       </div>
       <div class="menuLabel">Tools</div>
       <div class="drawerGroup">
-        <button onclick="saveAll(); closeMobileMenu()">Save changes</button>
+        <button onclick="syncNow(); closeMobileMenu()">Sync now</button>
         <button onclick="exportData(); closeMobileMenu()">Export data</button>
         <button onclick="document.getElementById('importFile').click(); closeMobileMenu()">Import data</button>
         <button onclick="window.print(); closeMobileMenu()">Print portal</button>
@@ -1416,7 +1436,7 @@
         <a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Garza Blanca <span>Open</span></a>
         <a target="_blank" rel="noreferrer" href="https://www.aeropuertosgap.com.mx/en/los-cabos-3.html">SJD Airport <span>Open</span></a>
         <a target="_blank" rel="noreferrer" href="https://www.flyaustin.com/">AUS Airport <span>Open</span></a>
-        <a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Firehouse <span>Open</span></a>
+        <a target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/services/boarding">PetSuites <span>Open</span></a>
       </div>
     </div>
   </aside>
@@ -1426,7 +1446,7 @@
       <div class="heroCopy">
         <p class="kpi">Operations Portal | Garza Blanca Los Cabos</p>
         <h1 id="portalTitle">Cabo 2026 Family Operations Portal</h1>
-        <p>A breezy command center for readiness before departure: travel-day execution, packing, resort decisions, weather, and Friday Lee boarding.</p>
+        <p>A shared place for the Cabo details that need to travel with the family.</p>
       </div>
       <aside class="statusPanel" aria-label="Trip status">
         <div>
@@ -1440,9 +1460,9 @@
           <div class="bar"><div id="readinessBar"></div></div>
         </div>
         <div>
-          <div class="kpi">Open Critical Items</div>
+          <div class="kpi">Action Items</div>
           <div class="big" id="criticalCount">0</div>
-          <div class="small">Dog boarding, transfers, passports, shopping</div>
+          <div class="small">Travel docs, transfers, bags, snacks, shopping</div>
         </div>
       </aside>
     </section>
@@ -1450,8 +1470,8 @@
     <section class="metricsStrip" aria-label="Trip metrics">
       <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('readiness')" onkeydown="activateFromKey(event, () => openAction('readiness'))"><span class="kpi">Readiness</span><strong id="readinessMetric">0%</strong><span class="small">Weighted operations score</span></div>
       <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('packing-outstanding')" onkeydown="activateFromKey(event, () => openAction('packing-outstanding'))"><span class="kpi">Packed</span><strong id="packingMetric">0%</strong><span class="small" id="packedMiniMetric">0/0 complete</span></div>
-      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('critical')" onkeydown="activateFromKey(event, () => openAction('critical'))"><span class="kpi">Critical</span><strong id="criticalMetric">0</strong><span class="small">Needs attention</span></div>
-      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('shopping-open')" onkeydown="activateFromKey(event, () => openAction('shopping-open'))"><span class="kpi">Shopping</span><strong id="shoppingMetric">0</strong><span class="small">Open procurement rows</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('critical')" onkeydown="activateFromKey(event, () => openAction('critical'))"><span class="kpi">Action Items</span><strong id="criticalMetric">0</strong><span class="small">Needs attention</span></div>
+      <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('shopping-open')" onkeydown="activateFromKey(event, () => openAction('shopping-open'))"><span class="kpi">Shopping Open</span><strong id="shoppingMetric">0</strong><span class="small">Open procurement rows</span></div>
       <div class="metricTile metricButton" role="button" tabindex="0" onclick="openAction('transfers')" onkeydown="activateFromKey(event, () => openAction('transfers'))"><span class="kpi">Transfers</span><strong id="transferMetric">Pending</strong><span class="small">Andrea details needed</span></div>
     </section>
 
@@ -1465,9 +1485,9 @@
     <section id="dashboard" class="page active">
       <div class="commandGrid">
         <article class="actionCard priority">
-          <span class="tag">Next best action</span>
-          <strong>Close Friday Lee boarding today.</strong>
-          <p class="small">Firehouse is the best fit. PetSuites is the backup if Firehouse does not close quickly.</p>
+          <span class="tag">Friday Lee</span>
+          <strong>Prep PetSuites food and drop-off bag.</strong>
+          <p class="small">Boarding is booked. Remaining work is portioning food, labeling it, and packing the drop-off basics.</p>
           <button onclick="showPage('dog')">Open Dog Board</button>
         </article>
         <article class="actionCard travel">
@@ -1505,11 +1525,15 @@
         <div class="card softAmber span3"><div class="kpi">Transfers</div><div class="big">Pending</div><div class="small">Andrea details still needed</div></div>
         <div class="card softMint span3"><div class="kpi">Packing</div><div class="big" id="packMini">0%</div><div class="small">Editable in every lane</div></div>
 
-        <div class="card span5">
-          <h3>Today&apos;s Priority Board</h3>
-          <label class="checkrow"><input type="checkbox" data-k="order_dog"><span><b>Close Friday Lee boarding.</b><br><span class="small">Firehouse first; PetSuites deposit if Firehouse does not close quickly.</span></span></label>
+        <div class="card span5" id="actionBoard">
+          <h3>Action Items</h3>
+          <label class="checkrow"><input type="checkbox" data-k="order_dog_food"><span><b>Prep Friday Lee food and drop-off bag.</b><br><span class="small">Pre-portion 7 nights of food, add buffer, leash/collar, and any medication or instructions.</span></span></label>
+          <label class="checkrow"><input type="checkbox" data-k="order_tsa"><span><b>Confirm TSA process.</b><br><span class="small">Know who needs passport/ID in hand and what documents stay in carry-on.</span></span></label>
           <label class="checkrow"><input type="checkbox" data-k="order_transfer"><span><b>Get Andrea transfer details.</b><br><span class="small">Company, SJD meeting point, and return pickup time.</span></span></label>
-          <label class="checkrow"><input type="checkbox" data-k="order_docs"><span><b>Update Southwest passport info.</b><br><span class="small">All travelers show passport info needs attention.</span></span></label>
+          <label class="checkrow"><input type="checkbox" data-k="order_docs"><span><b>Finish passport setup / docs.</b><br><span class="small">Update Southwest traveler document info and keep passports in carry-on.</span></span></label>
+          <label class="checkrow"><input type="checkbox" data-k="order_uber"><span><b>Reserve or plan Uber timing.</b><br><span class="small">Home departure target is 9:10 AM for a 10:00 AM AUS arrival.</span></span></label>
+          <label class="checkrow"><input type="checkbox" data-k="order_bags"><span><b>Confirm checked bags.</b><br><span class="small">Confirm whether bags are included or need to be paid/handled in advance.</span></span></label>
+          <label class="checkrow"><input type="checkbox" data-k="order_snacks"><span><b>Pack travel snacks.</b><br><span class="small">Plane snacks and easy kid backup food for airport timing.</span></span></label>
           <label class="checkrow"><input type="checkbox" data-k="order_shopping"><span><b>Close essential shopping.</b><br><span class="small">Umbrella stroller, Gibson sandals, June water shoes, headphone decision.</span></span></label>
         </div>
 
@@ -1522,14 +1546,8 @@
             <tr><td>Return</td><td><span class="pill warn">Transfer pending</span></td><td>Leave resort 8:00 AM target; confirm with transfer company.</td></tr>
             <tr><td>Shopping</td><td><span class="pill warn" id="shopStatusText">Open</span></td><td><span id="shopMini">0 open</span></td></tr>
             <tr><td>Packing</td><td><span class="pill info" id="packStatus">0% packed</span></td><td>Use the editable packing hub by person, shared lane, or shopping category.</td></tr>
-            <tr><td>Dog Boarding</td><td><span class="pill warn">Decision today</span></td><td>Call Firehouse; pay PetSuites deposit if not confirmed.</td></tr>
+            <tr><td>Dog Boarding</td><td><span class="pill ok">Booked</span></td><td>PetSuites confirmed; prep food and drop-off bag.</td></tr>
           </table>
-        </div>
-
-        <div class="card span12">
-          <h3>Readiness Calculation</h3>
-          <div class="focusRail" id="focusRail" style="margin-bottom:12px"></div>
-          <div class="grid" id="readinessRows"></div>
         </div>
       </div>
     </section>
@@ -1537,39 +1555,48 @@
     <section id="travel" class="page">
       <div class="grid">
         <div class="card span12">
+          <h3>Travel-Day Overview</h3>
           <div class="tabs">
-            <button class="active" data-trip-tab="outbound" onclick="setTripDay('outbound', this)">Outbound</button>
-            <button data-trip-tab="return" onclick="setTripDay('return', this)">Return</button>
+            <button class="active" data-trip-tab="outbound" onclick="setTripDay('outbound', this)">Outbound day (Jun 27)</button>
+            <button data-trip-tab="return" onclick="setTripDay('return', this)">Return day (Jul 3)</button>
           </div>
           <div id="tripdayCard" class="grid"></div>
         </div>
 
-        <div class="card span8">
-          <h3>Flight Selector + Seat Grid</h3>
+        <div class="card span12">
+          <h3>Flight Details</h3>
           <div class="tabs">
             <button class="active" data-flight-tab="outbound" onclick="setFlight('outbound', this)">Outbound WN627</button>
             <button data-flight-tab="return" onclick="setFlight('return', this)">Return WN628</button>
           </div>
-          <div class="grid">
-            <div class="card compact span3"><div class="kpi">Flight</div><div class="big" id="flightNo">WN627</div><div id="flightRoute">AUS to SJD</div></div>
-            <div class="card compact span3"><div class="kpi">Time</div><div class="big" id="flightDepart">12:00</div><div id="flightArrive">Arrive 12:25 PM</div></div>
-            <div class="card compact span3"><div class="kpi">Danielle + Levon</div><div class="big" style="font-size:22px">ACYITW</div><div>25E / 25F</div></div>
-            <div class="card compact span3"><div class="kpi">Steven + Kids</div><div class="big" style="font-size:22px">ACWDMM</div><div>25A-25D</div></div>
+          <div class="travelSummaryGrid">
+            <div class="card compact"><div class="kpi">Flight</div><div class="big" id="flightNo">WN627</div><div id="flightRoute">AUS to SJD</div></div>
+            <div class="card compact"><div class="kpi">Departure</div><div class="big" id="flightDepart">12:00</div><div id="flightArrive">Arrive 12:25 PM</div></div>
+            <div class="card compact"><div class="kpi">Boarding</div><div class="big" style="font-size:22px">TBD</div><div>Check Southwest day-of</div></div>
+            <div class="card compact"><div class="kpi">Confirmations</div><div class="big" style="font-size:22px">2 codes</div><div>ACYITW + ACWDMM</div></div>
           </div>
-          <div class="seatGrid" style="margin-top:12px" id="seatGrid"></div>
-          <details style="margin-top:12px">
-            <summary>Passenger document status <span class="pill warn">Passport info</span></summary>
-            <div class="inner"><table><tr><th>Traveler</th><th>Seat</th><th>Confirmation</th><th>Rapid Rewards</th><th>Status</th></tr><tbody id="passengerRows"></tbody></table></div>
-          </details>
         </div>
 
-        <div class="card span4">
-          <h3>Shopping Tracker</h3>
-          <div class="grid">
-            <div class="card compact span6"><div class="kpi">Ordered</div><div class="big" id="orderedCount">0</div></div>
-            <div class="card compact span6"><div class="kpi">Needs decision</div><div class="big" id="maybeCount">0</div></div>
+        <div class="card span12">
+          <h3>Seat Assignments - Row 25</h3>
+          <div class="seatGrid" style="margin-top:12px" id="seatGrid"></div>
+        </div>
+
+        <div class="card span12">
+          <h3>Passenger Details</h3>
+          <div class="tableWrap"><table><tr><th>Traveler</th><th>Seat</th><th>Confirmation</th><th>Rapid Rewards</th><th>Docs</th></tr><tbody id="passengerRows"></tbody></table></div>
+        </div>
+
+        <div class="card span12">
+          <h3>Travel Prep</h3>
+          <div class="travelPrepGrid">
+            <label class="checkrow"><input type="checkbox" data-k="order_tsa"><span><b>TSA process</b><br><span class="small">Confirm documents, carry-on passport plan, and airport flow.</span></span></label>
+            <label class="checkrow"><input type="checkbox" data-k="order_docs"><span><b>Passport setup / docs</b><br><span class="small">Update Southwest document info for all travelers.</span></span></label>
+            <label class="checkrow"><input type="checkbox" data-k="order_uber"><span><b>Uber reservation</b><br><span class="small">Plan or reserve home-to-AUS ride for 9:10 AM departure.</span></span></label>
+            <label class="checkrow"><input type="checkbox" data-k="order_bags"><span><b>Checked bags</b><br><span class="small">Confirm included vs. pay in advance, then assign bag owners.</span></span></label>
+            <label class="checkrow"><input type="checkbox" data-k="order_snacks"><span><b>Travel snacks</b><br><span class="small">Pack easy airport/plane snacks and kid backup food.</span></span></label>
+            <label class="checkrow"><input type="checkbox" data-k="order_transfer"><span><b>Cabo transfer details</b><br><span class="small">Company, SJD meeting point, and return pickup time from Andrea.</span></span></label>
           </div>
-          <table style="margin-top:10px"><tr><th>Item</th><th>Status</th></tr><tbody id="shoppingMiniRows"></tbody></table>
         </div>
       </div>
     </section>
@@ -1647,7 +1674,7 @@
         <details class="card span12 shoppingPanel shoppingViewOnly" id="shoppingWrap" open>
           <summary>Shopping + Procurement <span class="pill warn" id="shoppingPanelStatus">Open items</span></summary>
           <div class="inner">
-            <div class="tableWrap"><table><tr><th><button class="sortHead" onclick="sortShopping('item')">Item</button></th><th><button class="sortHead" onclick="sortShopping('qty')">Qty</button></th><th><button class="sortHead" onclick="sortShopping('owner')">Owner</button></th><th><button class="sortHead" onclick="sortShopping('category')">Category</button></th><th><button class="sortHead" onclick="sortShopping('ordered')">Ordered</button></th><th><button class="sortHead" onclick="sortShopping('delivered')">Delivered</button></th><th><button class="sortHead" onclick="sortShopping('packed')">Packed</button></th><th><button class="sortHead" onclick="sortShopping('notes')">Notes</button></th><th></th></tr><tbody id="shopRows"></tbody></table></div>
+            <div class="tableWrap"><table><tr><th><button class="sortHead" onclick="sortShopping('item')">Item</button></th><th><button class="sortHead" onclick="sortShopping('qty')">Qty</button></th><th><button class="sortHead" onclick="sortShopping('owner')">Owner</button></th><th><button class="sortHead" onclick="sortShopping('category')">Category</button></th><th><button class="sortHead" onclick="sortShopping('ordered')">Ordered</button></th><th><button class="sortHead" onclick="sortShopping('delivered')">Delivered</button></th><th><button class="sortHead" onclick="sortShopping('packed')">Packed</button></th><th><button class="sortHead" onclick="sortShopping('status')">Status</button></th><th></th></tr><tbody id="shopRows"></tbody></table></div>
             <div class="sectionTools"><button onclick="addShopItem()">Add shopping item</button></div>
           </div>
         </details>
@@ -1815,12 +1842,52 @@
 
     <section id="dog" class="page">
       <div class="grid">
-        <div class="card span12"><h3>Friday Lee Boarding Plan</h3><p class="small">Firehouse is the first choice after Nancy&apos;s callback. PetSuites is the fastest backup because the reservation is started and only needs the deposit.</p></div>
-        <div class="card softMint span6"><div class="kpi">Primary move</div><h3>Book Firehouse if availability and first-stay requirements are clean.</h3><p class="small">Best travel fit: flexible 7 PM pickup window after the 4 PM AUS landing, professional operation, and no interview requirement surfaced yet.</p></div>
-        <div class="card softAmber span6"><div class="kpi">Fallback rule</div><h3>If Firehouse does not close quickly, pay the PetSuites deposit.</h3><p class="small">PetSuites has a June 26 at 1:00 PM reservation started and is administratively furthest along.</p></div>
-        <div class="card span12"><h3>Timing Anchors</h3><div class="grid"><div class="card compact span3"><div class="kpi">Fri Jun 26</div><div class="big" style="font-size:22px">1:00-6:00 PM</div><div class="small">PetSuites currently shows 1:00 PM; Firehouse/Camp ideally 5:00-6:00 PM.</div></div><div class="card compact span3"><div class="kpi">Sat Jun 27</div><div class="big" style="font-size:22px">12:00 PM</div><div class="small">WN627 departs AUS. Dog logistics should already be done.</div></div><div class="card compact span3"><div class="kpi">Fri Jul 3</div><div class="big" style="font-size:22px">4:00 PM</div><div class="small">WN628 lands AUS. Real pickup target is 6:00-7:00 PM.</div></div><div class="card compact span3"><div class="kpi">Pickup rule</div><div class="big" style="font-size:22px">7 PM close</div><div class="small">Firehouse, Camp Bow Wow, and PetSuites work better than restricted-window facilities.</div></div></div></div>
-        <div class="card span12"><table><tr><th>Facility</th><th>Rank</th><th>Cost</th><th>Fit</th><th>Status</th><th>Links</th><th>Notes</th></tr><tbody id="dogRows"></tbody></table></div>
-        <div class="card span12"><h3>Boarding Checklist</h3><div id="dogChecklist" class="grid"></div></div>
+        <div class="card span12">
+          <h3>Friday Lee PetSuites Boarding HQ</h3>
+          <p class="small">PetSuites Round Rock is selected. Reservation is active, deposit is collected, vaccination records were received, and drop-off is scheduled. Remaining work is food prep, drop-off bag, and return-day timing.</p>
+        </div>
+        <div class="card softMint span3"><div class="kpi">Status</div><div class="big" style="font-size:24px">Booked</div><div class="small">PetSuites selected</div></div>
+        <div class="card span3"><div class="kpi">Drop-Off</div><div class="big" style="font-size:24px">Jun 26</div><div class="small">1:00 PM</div></div>
+        <div class="card span3"><div class="kpi">Pickup</div><div class="big" style="font-size:24px">Jul 3</div><div class="small">Target 6:00-7:00 PM</div></div>
+        <div class="card softBlue span3"><div class="kpi">Expected</div><div class="big" style="font-size:24px">~$354</div><div class="small">After expected $51 credit</div></div>
+
+        <div class="card span5">
+          <h3>Facility Contact</h3>
+          <table>
+            <tr><td>Facility</td><td><b>PetSuites Round Rock</b></td></tr>
+            <tr><td>Address</td><td>1401 Louis Henna Blvd, Round Rock, TX 78664</td></tr>
+            <tr><td>Reservation phone</td><td><a href="tel:+15125033695">(512) 503-3695</a></td></tr>
+            <tr><td>Official phone</td><td><a href="tel:+17374442137">(737) 444-2137</a></td></tr>
+            <tr><td>Records email</td><td>petsuites@shots.pet</td></tr>
+            <tr><td>Hours</td><td>Mon-Fri 6:30 AM-7 PM; Sat-Sun 7 AM-5 PM</td></tr>
+          </table>
+          <div class="sectionTools"><a class="tag" target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/">PetSuites Site</a><a class="tag" target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/services/boarding">Boarding Info</a><a class="tag" target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=1401+Louis+Henna+Blvd+Round+Rock+TX+78664">Map</a></div>
+        </div>
+
+        <div class="card span7">
+          <h3>Reservation + Cost</h3>
+          <table>
+            <tr><td>Stay dates</td><td>Fri Jun 26 - Fri Jul 3</td></tr>
+            <tr><td>Reservation date/time</td><td>June 26, 2026 @ 1:00 PM</td></tr>
+            <tr><td>Room</td><td>Dog Boarding Classic / Classic Suite</td></tr>
+            <tr><td>Base rate</td><td>$51/night</td></tr>
+            <tr><td>Estimate</td><td><b>$405</b> before expected first-stay credit</td></tr>
+            <tr><td>Expected final</td><td><b>~$354</b> after expected $51 first-stay credit</td></tr>
+            <tr><td>Records</td><td>Vaccination records received successfully</td></tr>
+            <tr><td>Disclosure</td><td>Pets may be unattended without an employee present from 8 PM-6 AM.</td></tr>
+          </table>
+        </div>
+
+        <div class="card span12">
+          <h3>Drop-Off + Pickup Plan</h3>
+          <div class="grid">
+            <div class="card compact span4"><div class="kpi">Drop-Off</div><h3>Fri Jun 26 @ 1:00 PM</h3><p class="small">Bring pre-portioned food, leash/collar, and any medication or instructions.</p></div>
+            <div class="card compact span4"><div class="kpi">Pickup</div><h3>Fri Jul 3, 6:00-7:00 PM target</h3><p class="small">WN628 lands AUS at 4:00 PM. Plan home/reset time before Friday pickup.</p></div>
+            <div class="card compact span4"><div class="kpi">Risk</div><h3>Do not miss pickup</h3><p class="small">If pickup is missed, PetSuites indicated pickup would wait until July 5.</p></div>
+          </div>
+        </div>
+
+        <div class="card span12"><h3>Remaining Prep</h3><div id="dogChecklist" class="grid"></div></div>
       </div>
     </section>
 
@@ -1838,8 +1905,6 @@
             <tr><td>Activities</td><td>Garza Blanca resort activities</td><td><a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Open</a></td></tr>
             <tr><td>All-Inclusive</td><td>Garza Blanca all-inclusive plan</td><td><a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/all-inclusive">Open</a></td></tr>
             <tr><td>Dining</td><td>Garza Blanca dining</td><td><a target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Open</a></td></tr>
-            <tr><td>Dog</td><td>Firehouse Pet Resort - Round Rock</td><td><a target="_blank" rel="noreferrer" href="https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx">Open</a></td></tr>
-            <tr><td>Dog</td><td>Camp Bow Wow Austin North</td><td><a target="_blank" rel="noreferrer" href="https://www.campbowwow.com/austin/services-pricing/dog-boarding/">Open</a></td></tr>
             <tr><td>Dog</td><td>PetSuites Round Rock</td><td><a target="_blank" rel="noreferrer" href="https://roundrock.petsuitesofamerica.com/services/boarding">Open</a></td></tr>
             <tr><td>Ground</td><td>Home to AUS route</td><td><a target="_blank" rel="noreferrer" href="https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=Austin-Bergstrom+International+Airport">Open</a></td></tr>
           </table>
@@ -1922,8 +1987,6 @@
         room: [["Laundry", "XL dirty laundry bags", "2", "Danielle", false, "Ordered"], ["Laundry", "Retractable clothesline", "1", "Danielle", false, "Ordered"], ["Packing", "Packing cubes", "8 set", "Danielle", false, "Ordered"], ["Packing", "Shoe bags", "6 pack", "Danielle", false, "Ordered"], ["Room Ops", "Magnetic hooks", "12 pack", "Danielle", false, "Ordered"], ["Safety", "Door stop alarms", "2", "Danielle", false, "Ordered"], ["Stroller", "Umbrella stroller", "1", "Danielle", false, "Open / decide"]]
       },
       onsite: [["Jun 28", "Check Kids Club schedule and signup process", "Danielle", false], ["Arrival day", "Confirm room numbers, proximity, and key distribution", "Danielle", false], ["Arrival day", "Ask dining reservation rules, kids menu, and room service rules", "Danielle", false], ["Pool day", "Confirm best kid pool, towel process, and cabana rules", "Danielle", false]],
-      dogNotes: {},
-      dogStatus: {},
       poolTote: [["Sunscreen + face stick", "2-3 + 1-2", false], ["Water bottles", "4", false], ["Goggles / snorkels", "4 goggles / 2 sets", false], ["Wet/plastic bags", "6-8", false], ["Room key / phone / sunglasses", "1 set", false]]
     };
 
@@ -1957,14 +2020,6 @@
       ["Wed", "Jul 1", "Sun", "77 / 76", "Sunshine"],
       ["Thu", "Jul 2", "Sun", "77 / 76", "Mostly sunny"],
       ["Fri", "Jul 3", "Refresh", "Refresh needed", "Update closer"]
-    ];
-
-    const dogFacilities = [
-      ["Firehouse Pet Resort", "#1 Best Overall", "$490-$525 est.", "Excellent. Works with July 3 4 PM landing + 6-7 PM pickup.", "Callback received", "https://firehousepetresort.com/firehouse-pet-resort-round-rock-tx", "https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=541+Louis+Henna+Blvd+Round+Rock+TX", "Nancy called from 512-310-7387. Call back, finish account setup, confirm room, total cost, pickup, and first-stay requirements."],
-      ["PetSuites Round Rock", "#2 Fastest To Close", "$370-$496 est.", "Very good. Late pickup likely adds discounted daycare fee after 10 AM.", "Reservation started", "https://roundrock.petsuitesofamerica.com/services/boarding", "https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=1401+Louis+Henna+Blvd+Round+Rock+TX", "Reservation started for June 26 at 1:00 PM. Deposit required before reservation is complete. Agreements signed. Vaccine policy includes DHPP, rabies, bordetella, canine influenza."],
-      ["Camp Bow Wow Austin North", "#3 Closest", "$385-$450+ est.", "Excellent schedule, but first-time interview adds admin.", "Interview needed", "https://www.campbowwow.com/austin/services-pricing/dog-boarding/", "https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=13900+N+IH-35+Austin+TX+78728", "Melissa called about the Camper Interview. Texted scheduling link. Needs rabies, bordetella, and distemper records."],
-      ["Green Acres Pet Ranch", "#4 Best Dog Environment", "~$379+ est.", "Good facility, weaker pickup flexibility.", "Not contacted", "https://www.greenacrespetranch.com/overnight-boarding", "https://www.google.com/maps/dir/?api=1&origin=2110+Emmett+Parkway+Austin+TX+78728&destination=100+Taylor+Ranch+Rd+Austin+TX", "Optional backup only if top 3 fail."],
-      ["Dogtopia Round Rock", "#5", "$364-$455 est.", "Works, but daycare-first model.", "Not pursuing", "https://www.dogtopia.com/roundrock/pricing/", "", "No action."]
     ];
 
     let data = loadData();
@@ -2166,8 +2221,6 @@
         row[field] = i.type === "checkbox" ? i.checked : i.value;
       });
       document.querySelectorAll("[data-pool-tote]").forEach(i => data.poolTote[+i.dataset.poolTote][2] = i.checked);
-      document.querySelectorAll("[data-dog-note]").forEach(i => data.dogNotes[i.dataset.dogNote] = i.value);
-      document.querySelectorAll("[data-dog-status]").forEach(i => data.dogStatus[i.dataset.dogStatus] = i.value);
       document.querySelectorAll("[data-dog-check]").forEach(i => data.checks["dog_" + i.dataset.dogCheck] = i.checked);
     }
     function autoSave() {
@@ -2193,10 +2246,10 @@
       document.querySelectorAll(".headerMenu").forEach(menu => menu.open = false);
       const titles = {
         dashboard: ["Dashboard", "Operating snapshot and priority board."],
-        travel: ["Travel Command Center", "Flights, seats, transfer assumptions, and trip-day anchors."],
+        travel: ["Travel", "Flight times, airport flow, documents, bags, and seats."],
         packing: ["Packing Hub", "Editable by person, shared lane, and shopping category."],
         resort: ["Resort Operations", "Garza Blanca resort intelligence, food, pools, rooms, and weather."],
-        dog: ["Dog Boarding", "Friday Lee facility decision board and checklist."],
+        dog: ["Friday Lee Boarding", "PetSuites booking details, food prep, drop-off, and pickup."],
         sources: ["Sources", "Reference links and date-sensitive notes."]
       };
       pageTitle.textContent = titles[id][0];
@@ -2247,8 +2300,12 @@
         showOutstandingOnly();
         return;
       }
+      if (action === "action-items") {
+        go("dashboard", "actionBoard");
+        return;
+      }
       if (action === "critical") {
-        go("dashboard", "focusRail");
+        go("dashboard", "actionBoard");
         return;
       }
       if (action === "transfers") {
@@ -2260,7 +2317,7 @@
         setResortView("weather");
         return;
       }
-      go("dashboard", "readinessRows");
+      go("dashboard", "actionBoard");
     }
 
     function setResortView(view = "overview", button, shouldJump = true) {
@@ -2303,12 +2360,12 @@
       if (button) button.classList.add("active");
       const outbound = which === "outbound";
       const rows = outbound
-        ? [["9:10 AM", "Uber leaves 2110 Emmett Pkwy"], ["10:00 AM", "Arrive AUS for checked bags + international departure"], ["12:00 PM", "WN627 departs AUS"], ["12:25 PM", "Arrive SJD"], ["Pending", "Meet Andrea-arranged Cabo transfer at SJD"]]
-        : [["8:00 AM", "Leave Garza Blanca target"], ["8:45 AM", "Arrive SJD for international departure buffer"], ["11:35 AM", "WN628 departs SJD"], ["4:00 PM", "Arrive AUS"], ["6:00-7:00 PM", "Target Friday Lee pickup window"]];
+        ? [["9:10 AM", "Uber leaves 2110 Emmett Pkwy"], ["10:00 AM", "Arrive AUS - checked bags + international buffer"], ["TBD", "Boarding time / process - check Southwest day-of"], ["12:00 PM", "WN627 departs AUS"], ["12:25 PM", "Arrive SJD"], ["TBD", "Meet Andrea-arranged Cabo transfer at SJD"]]
+        : [["8:00 AM", "Leave Garza Blanca target"], ["8:45 AM", "Arrive SJD for international departure buffer"], ["TBD", "Boarding time / process - check Southwest day-of"], ["11:35 AM", "WN628 departs SJD"], ["4:00 PM", "Arrive AUS"], ["6:00-7:00 PM", "Pick up Friday Lee from PetSuites"]];
       const costs = outbound
-        ? [["Home to AUS", "Uber"], ["Planning cost", "$65-$100 est."], ["SJD to Resort", "Andrea arranging"], ["SJD meeting instructions", "Add when received"]]
-        : [["Resort to SJD", "Andrea arranging"], ["Pickup location/time", "8:00 AM target; confirm with transfer company"], ["AUS to Home", "Uber"], ["Planning cost", "$65-$100 est."], ["Dog pickup", "6:00-7:00 PM target"]];
-      tripdayCard.innerHTML = `<div class="card compact span7"><h3>${outbound ? "Outbound - Sat Jun 27" : "Return - Fri Jul 3"}</h3><div class="timeline">${rows.map(r => `<div class="time">${r[0]}</div><div>${r[1]}</div>`).join("")}</div></div><div class="card compact span5"><h3>Transfer + Cost Inputs</h3><table><tr><th>Item</th><th>Status</th></tr>${costs.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table></div>`;
+        ? [["Home to AUS", "Uber - reserve or plan timing"], ["Checked bags", "Confirm included vs. pay in advance"], ["SJD to resort", "Andrea arranging"], ["SJD meeting point", "Add when received"]]
+        : [["Resort to SJD", "Andrea arranging"], ["Pickup location/time", "8:00 AM target; confirm with transfer company"], ["AUS to home", "Uber"], ["Planning cost", "$65-$100 est."], ["PetSuites pickup", "6:00-7:00 PM target"]];
+      tripdayCard.innerHTML = `<div class="card compact span7"><h3>${outbound ? "Outbound - Sat Jun 27" : "Return - Fri Jul 3"}</h3><div class="timeline">${rows.map(r => `<div class="time">${r[0]}</div><div>${r[1]}</div>`).join("")}</div></div><div class="card compact span5"><h3>Transfer Details</h3><table><tr><th>Item</th><th>Status</th></tr>${costs.map(r => `<tr><td>${r[0]}</td><td>${r[1]}</td></tr>`).join("")}</table></div>`;
     }
     function setFlight(which, button) {
       activeFlight = which;
@@ -2346,7 +2403,7 @@
       return true;
     }
     function valueForShopping(row, field) {
-      const map = { item: 0, qty: 1, owner: 2, category: 3, notes: 7 };
+      const map = { item: 0, qty: 1, owner: 2, category: 3 };
       if (field === "ordered") return row[4] ? 1 : 0;
       if (field === "delivered") return row[5] ? 1 : 0;
       if (field === "packed") return row[6] ? 1 : 0;
@@ -2363,15 +2420,11 @@
           const result = av > bv ? 1 : av < bv ? -1 : a.index - b.index;
           return shoppingSort.dir === "asc" ? result : -result;
         });
-      shopRows.innerHTML = rows.length ? rows.map(({ row: r, index: i }) => `<tr data-shopping-row="${i}"><td><input value="${esc(r[0])}" data-shop="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shop="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shop="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shop="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shop="${i}" data-f="4"></td><td><input type="checkbox" ${r[5] ? "checked" : ""} data-shop="${i}" data-f="5"></td><td><input type="checkbox" ${r[6] ? "checked" : ""} data-shop="${i}" data-f="6"></td><td><input value="${esc(r[7])}" data-shop="${i}" data-f="7"><div class="small">${shoppingStatus(r)}</div></td><td><button class="danger" onclick="deleteShopItem(${i})">Remove</button></td></tr>`).join("") : `<tr><td colspan="9"><div class="emptyState">No shopping rows match this filter.</div></td></tr>`;
-      shoppingMiniRows.innerHTML = data.shopping
-        .filter(x => !x[4] || x[3].includes("Essential") || x[3].includes("Decision"))
-        .slice(0, 8)
-        .map(r => {
-          const label = r[4] ? "Ordered" : r[3];
-          const cls = r[4] ? "ok" : r[3].includes("Essential") ? "bad" : "warn";
-          return `<tr><td>${esc(r[0])}</td><td><span class="pill ${cls}">${label}</span></td></tr>`;
-        }).join("");
+      shopRows.innerHTML = rows.length ? rows.map(({ row: r, index: i }) => {
+        const status = shoppingStatus(r);
+        const cls = status === "Packed" || status === "Delivered" ? "ok" : status === "Ordered" ? "info" : status === "Decision" ? "warn" : "bad";
+        return `<tr data-shopping-row="${i}"><td><input value="${esc(r[0])}" data-shop="${i}" data-f="0"></td><td><input value="${esc(r[1])}" data-shop="${i}" data-f="1"></td><td><input value="${esc(r[2])}" data-shop="${i}" data-f="2"></td><td><input value="${esc(r[3])}" data-shop="${i}" data-f="3"></td><td><input type="checkbox" ${r[4] ? "checked" : ""} data-shop="${i}" data-f="4"></td><td><input type="checkbox" ${r[5] ? "checked" : ""} data-shop="${i}" data-f="5"></td><td><input type="checkbox" ${r[6] ? "checked" : ""} data-shop="${i}" data-f="6"></td><td><span class="pill ${cls}">${status}</span></td><td><button class="danger" onclick="deleteShopItem(${i})">Remove</button></td></tr>`;
+      }).join("") : `<tr><td colspan="9"><div class="emptyState">No shopping rows match this filter.</div></td></tr>`;
     }
     function sortShopping(field) {
       collectAll();
@@ -2449,15 +2502,17 @@
     function deleteOnsiteNote(index) { collectAll(); data.onsite.splice(index, 1); renderAll(); }
 
     function renderDog() {
-      const options = ["Waiting", "Callback received", "Reservation started", "Interview needed", "Available", "Booked", "Eliminated", "Not contacted", "Not pursuing"];
-      dogRows.innerHTML = dogFacilities.map((d, i) => {
-        const status = data.dogStatus[i] || d[4];
-        const note = data.dogNotes[i] || d[7];
-        const optionHtml = options.map(v => `<option ${status === v ? "selected" : ""}>${v}</option>`).join("");
-        const links = `<a target="_blank" rel="noreferrer" href="${d[5]}">Site</a>${d[6] ? ` | <a target="_blank" rel="noreferrer" href="${d[6]}">Map</a>` : ""}`;
-        return `<tr><td><b>${d[0]}</b></td><td>${d[1]}</td><td>${d[2]}</td><td>${d[3]}</td><td><select data-dog-status="${i}">${optionHtml}</select></td><td>${links}</td><td><textarea data-dog-note="${i}">${esc(note)}</textarea></td></tr>`;
-      }).join("");
-      dogChecklist.innerHTML = ["Confirm boarding June 26-July 3 for Friday Lee", "Confirm drop-off Friday June 26 around 5-6 PM, or PetSuites 1:00 PM", "Confirm pickup Friday July 3 around 6-7 PM", "Ask total all-in cost including holiday/day/pickup fees", "Ask if any evaluation, trial day, or vaccine gap prevents boarding", "If Firehouse cannot close quickly, pay PetSuites deposit and stop"].map((item, i) => `<div class="card compact span4"><label class="checkrow"><input type="checkbox" data-dog-check="${i}" ${data.checks["dog_" + i] ? "checked" : ""}><span>${item}</span></label></div>`).join("");
+      const prepItems = [
+        "Pre-portion Friday Lee food for 7 nights.",
+        "Add extra food buffer in case pickup shifts.",
+        "Label food with Friday Lee Feinman, Jun 26-Jul 3, and instructions.",
+        "Pack leash + collar.",
+        "Pack medication / supplements if any.",
+        "Add emergency contact info if requested.",
+        "Add drop-off and pickup to calendar.",
+        "Confirm pickup target still works after AUS arrival."
+      ];
+      dogChecklist.innerHTML = prepItems.map((item, i) => `<div class="card compact span4"><label class="checkrow"><input type="checkbox" data-dog-check="${i}" ${data.checks["dog_" + i] ? "checked" : ""}><span>${item}</span></label></div>`).join("");
     }
 
     function updateMetrics() {
@@ -2485,6 +2540,18 @@
       const shoppingDecisionRows = data.shopping.filter(x => !x[4] && (x[3].includes("Essential") || x[3].includes("Decision") || x[3] === "Optional"));
       const ordered = data.shopping.filter(x => x[4]).length;
       const shoppingCritical = data.shopping.filter(x => !x[4] && x[3].includes("Essential")).length;
+      const shoppingActionDone = Boolean(data.checks.order_shopping) || shoppingCritical === 0;
+      const actionItems = [
+        ["Dog food", data.checks.order_dog_food],
+        ["TSA", data.checks.order_tsa],
+        ["Transfer", data.checks.order_transfer],
+        ["Docs", data.checks.order_docs],
+        ["Uber", data.checks.order_uber],
+        ["Bags", data.checks.order_bags],
+        ["Snacks", data.checks.order_snacks],
+        ["Shopping", shoppingActionDone]
+      ];
+      const openActionCount = actionItems.filter(([, done]) => !done).length;
 
       overallPacked.textContent = packedPct + "%";
       overallPackedBar.style.width = packedPct + "%";
@@ -2492,8 +2559,10 @@
       outstandingItems.textContent = packingTotal - packingDone;
       shoppingOpen.textContent = shoppingOpenRows.length;
       shoppingMetric.textContent = shoppingOpenRows.length;
-      orderedCount.textContent = ordered;
-      maybeCount.textContent = shoppingDecisionRows.length;
+      const orderedCountEl = document.getElementById("orderedCount");
+      if (orderedCountEl) orderedCountEl.textContent = ordered;
+      const maybeCountEl = document.getElementById("maybeCount");
+      if (maybeCountEl) maybeCountEl.textContent = shoppingDecisionRows.length;
       packMini.textContent = packedPct + "%";
       packStatus.textContent = packedPct + "% packed";
       packingMetric.textContent = packedPct + "%";
@@ -2524,8 +2593,8 @@
         ["Flights", 100, "Booked"],
         ["Resort", 100, "Booked"],
         ["Transfers", data.checks.order_transfer ? 100 : 60, data.checks.order_transfer ? "Confirmed" : "Andrea details pending"],
-        ["Documents", data.checks.order_docs ? 100 : 40, data.checks.order_docs ? "Passport info updated" : "Passport alerts open"],
-        ["Dog Boarding", data.checks.order_dog ? 100 : 45, data.checks.order_dog ? "Booked" : "Decision open"],
+        ["Documents", data.checks.order_docs && data.checks.order_tsa ? 100 : data.checks.order_docs || data.checks.order_tsa ? 70 : 40, data.checks.order_docs && data.checks.order_tsa ? "Docs ready" : "Passport/TSA tasks open"],
+        ["Dog Boarding", data.checks.order_dog_food ? 100 : 90, data.checks.order_dog_food ? "Booked + prep complete" : "Booked; food prep open"],
         ["Shopping", shoppingCritical ? 55 : shoppingDecisionRows.length ? 75 : 100, shoppingCritical ? "Essential items open" : shoppingDecisionRows.length ? "Optional decisions open" : "Clear"],
         ["Packing", packedPct, `${packingDone}/${packingTotal} packed`]
       ];
@@ -2533,18 +2602,14 @@
       readinessPct.textContent = readiness + "%";
       readinessMetric.textContent = readiness + "%";
       readinessBar.style.width = readiness + "%";
-      const criticalItems = [
-        !data.checks.order_dog,
-        !data.checks.order_transfer,
-        !data.checks.order_docs,
-        shoppingCritical > 0
-      ].filter(Boolean).length;
-      criticalCount.textContent = criticalItems;
-      criticalMetric.textContent = criticalItems;
+      criticalCount.textContent = openActionCount;
+      criticalMetric.textContent = openActionCount;
       transferMetric.textContent = data.checks.order_transfer ? "Confirmed" : "Pending";
-      readinessRows.innerHTML = scores.map(s => `<div class="miniPanel span3"><div class="kpi">${s[0]}</div><div class="big" style="font-size:22px">${s[1]}%</div><div class="small">${s[2]}</div></div>`).join("");
-      focusRail.innerHTML = [
-        ["Dog", data.checks.order_dog ? "Booked" : "Call Firehouse", data.checks.order_dog ? "ok" : "warn"],
+      const readinessRowsEl = document.getElementById("readinessRows");
+      if (readinessRowsEl) readinessRowsEl.innerHTML = scores.map(s => `<div class="miniPanel span3"><div class="kpi">${s[0]}</div><div class="big" style="font-size:22px">${s[1]}%</div><div class="small">${s[2]}</div></div>`).join("");
+      const focusRailEl = document.getElementById("focusRail");
+      if (focusRailEl) focusRailEl.innerHTML = [
+        ["Dog", data.checks.order_dog_food ? "Prep done" : "Food prep", data.checks.order_dog_food ? "ok" : "warn"],
         ["Transfer", data.checks.order_transfer ? "Confirmed" : "Andrea pending", data.checks.order_transfer ? "ok" : "warn"],
         ["Docs", data.checks.order_docs ? "Updated" : "Passport info", data.checks.order_docs ? "ok" : "bad"],
         ["Shopping", shoppingCritical ? `${shoppingCritical} essential` : shoppingDecisionRows.length ? `${shoppingDecisionRows.length} decisions` : "Clear", shoppingCritical ? "bad" : shoppingDecisionRows.length ? "warn" : "ok"],
