@@ -1074,18 +1074,24 @@
     .stickySubTabs button,
     .stickySubTabs .tag {
       flex: 0 0 auto;
-      min-height: 31px;
-      padding: 4px 9px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 34px;
+      min-height: 34px;
+      padding: 0 12px;
       font-size: 12px;
       line-height: 1.2;
       white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
     .stickySubTabs button.active,
     .stickySubTabs .tag.active {
-      background: #e2f5f8;
+      background: linear-gradient(180deg, rgba(216, 243, 248, 0.94), rgba(255, 255, 255, 0.86));
       color: var(--navy);
       border-color: rgba(10, 147, 150, 0.35);
-      box-shadow: none;
+      box-shadow: inset 0 0 0 1px rgba(10, 147, 150, 0.1);
     }
     :root[data-theme="dark"] .stickySubTabs {
       background: rgba(17, 29, 43, 0.94);
@@ -1094,6 +1100,7 @@
     .resortJumpMenu {
       background: rgba(247, 252, 253, 0.92);
     }
+    .resortJumpMenu .shortLabel { display: none; }
     .pageIntro {
       display: grid;
       grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr);
@@ -1116,6 +1123,68 @@
     .featurePanel .small {
       color: #fff;
     }
+    .featurePanel p { max-width: 780px; }
+    .resortMiniHero {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-end;
+      margin-bottom: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(120deg, rgba(255, 255, 255, 0.95), rgba(216, 243, 248, 0.72)),
+        radial-gradient(circle at 100% 0, rgba(125, 207, 182, 0.28), transparent 260px);
+      box-shadow: var(--softShadow);
+    }
+    .resortMiniHero h3 { margin-bottom: 4px; font-size: 20px; }
+    .resortMiniHero p { margin: 0; color: var(--muted); }
+    .resortMiniHero .sectionTools { margin: 0; justify-content: flex-end; }
+    .resortFacts {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .resortFact {
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.72);
+    }
+    .resortFact strong {
+      display: block;
+      color: var(--navy);
+      font-size: 16px;
+      line-height: 1.2;
+    }
+    .resortFocusGrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .resortFocusCard {
+      min-height: 118px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--paper), rgba(216, 243, 248, 0.28));
+    }
+    .resortFocusCard h4 { margin-top: 8px; }
+    .resortCompactList {
+      display: grid;
+      gap: 7px;
+    }
+    .resortCompactItem {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 9px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--paper);
+    }
+    .resortCompactItem .pill { flex: 0 0 auto; }
     .quickGrid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1185,6 +1254,7 @@
       .ownerSummary, .zoneSummary { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       .resortOverviewGrid { grid-template-columns: 1fr; }
       .resortTileGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .resortFacts, .resortFocusGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .decisionMatrix { grid-template-columns: 1fr; }
     }
     @media (max-width: 820px) {
@@ -1220,11 +1290,21 @@
       }
       .stickySubTabs button,
       .stickySubTabs .tag {
+        height: 34px;
         min-height: 34px;
-        padding: 6px 10px;
+        padding: 0 10px;
       }
+      .resortJumpMenu .fullLabel { display: none; }
+      .resortJumpMenu .shortLabel { display: inline; }
       .stickySubTabs .spacer { display: none; }
       .linkGrid, .quickGrid, .resortTileGrid, .travelSummaryGrid, .travelPrepGrid { grid-template-columns: 1fr; }
+      .resortMiniHero {
+        display: grid;
+        gap: 10px;
+        align-items: start;
+      }
+      .resortMiniHero .sectionTools { justify-content: flex-start; }
+      .resortFacts, .resortFocusGrid { grid-template-columns: 1fr; }
       .mapEmbed { height: 260px; }
       .heroCopy { min-height: 220px; padding: 18px; }
       .statusPanel { min-height: 260px; padding: 12px; }
@@ -1682,147 +1762,139 @@
     </section>
 
     <section id="resort" class="page" data-resort-view="overview">
-      <div class="stickySubTabs resortJumpMenu">
+      <div class="stickySubTabs resortJumpMenu" aria-label="Resort sections">
         <button class="active" data-resort-view="overview" onclick="setResortView('overview', this)">Overview</button>
-        <button data-resort-view="weather" onclick="setResortView('weather', this)">Weather</button>
         <button data-resort-view="dining" onclick="setResortView('dining', this)">Dining</button>
-        <button data-resort-view="pools" onclick="setResortView('pools', this)">Pools &amp; beach</button>
-        <button data-resort-view="kids" onclick="setResortView('kids', this)">Kids Club</button>
-        <button data-resort-view="rooms" onclick="setResortView('rooms', this)">Rooms &amp; setup</button>
-        <button data-resort-view="notes" onclick="setResortView('notes', this)">Onsite Notes</button>
-        <span class="spacer"></span>
-        <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Official Site</a>
-        <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Dining</a>
+        <button data-resort-view="pools" onclick="setResortView('pools', this)"><span class="fullLabel">Pools &amp; beach</span><span class="shortLabel">Pools</span></button>
+        <button data-resort-view="kids" onclick="setResortView('kids', this)"><span class="fullLabel">Kids Club</span><span class="shortLabel">Kids</span></button>
+        <button data-resort-view="rooms" onclick="setResortView('rooms', this)"><span class="fullLabel">Rooms &amp; setup</span><span class="shortLabel">Rooms</span></button>
+        <button data-resort-view="weather" onclick="setResortView('weather', this)">Weather</button>
+        <button data-resort-view="notes" onclick="setResortView('notes', this)"><span class="fullLabel">Onsite Notes</span><span class="shortLabel">Notes</span></button>
       </div>
 
-      <div class="pageIntro resortPanel resortOverviewPanel" id="resort-overview">
-        <div class="featurePanel">
-          <p class="kpi">Garza Blanca Resort &amp; Spa Los Cabos</p>
-          <h2>Resort command center</h2>
-          <p>Arrival decisions, kid logistics, dining defaults, pool operations, room setup, weather, and check-in questions are organized here.</p>
-          <div class="sectionTools">
-            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Resort</a>
-            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/all-inclusive">All-inclusive</a>
-            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/kids-club">Kids Club</a>
-            <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Activities</a>
-          </div>
-        </div>
-        <div class="quickGrid">
-          <div class="quickCard"><div class="kpi">Address</div><strong>Km. 17.5 Tourist Corridor</strong><div class="small">Cabo San Lucas, BCS 23405</div></div>
-          <div class="quickCard"><div class="kpi">Phone</div><strong>+52 624 105 4460</strong><div class="small">Toll Free: 1 800 931 6023</div></div>
-          <div class="quickCard"><div class="kpi">Kids Club</div><strong>9 AM-5 PM</strong><div class="small">Ages 4-12; confirm schedule onsite</div></div>
-          <div class="quickCard"><div class="kpi">Operating Style</div><strong>Pool-first</strong><div class="small">Beach is available; kid default is pool logistics</div></div>
-        </div>
-      </div>
-
-      <div class="resortTileGrid resortPanel resortOverviewPanel">
-        <button class="resortTile" onclick="setResortView('dining')"><span class="pill info">Dining</span><strong>Meals + reservations</strong><span>Breakfast default, pool lunch, dinner fallback, and official dining links.</span></button>
-        <button class="resortTile" onclick="setResortView('pools')"><span class="pill ok">Pools</span><strong>Pool + beach base</strong><span>Kid pool, family pool, towel/cabana questions, and daily tote.</span></button>
-        <button class="resortTile" onclick="setResortView('kids')"><span class="pill warn">Kids</span><strong>Kids Club</strong><span>Hours, ages, activities, signup rules, and babysitting backup.</span></button>
-        <button class="resortTile" onclick="setResortView('rooms')"><span class="pill neutral">Rooms</span><strong>Room setup</strong><span>Sleeping setup, proximity questions, and room logistics.</span></button>
-        <button class="resortTile" onclick="setResortView('weather')"><span class="pill info">Weather</span><strong>Sun + swim plan</strong><span>Compact forecast signal for pool days, UV, and beach checks.</span></button>
-      </div>
-
-      <div class="resortOverviewGrid resortPanel resortOverviewPanel">
-        <section class="resortScene">
-          <p class="kpi">Arrival Day Operating Plan</p>
-          <h2 style="color:#fff">Land, transfer, check in, anchor the pool base.</h2>
-          <p>Keep the first resort hour focused on keys, wristbands, Kids Club rules, dining reservations, towel/cabana rules, and an easy dinner fallback.</p>
-          <div class="sectionTools">
-            <button onclick="setResortView('rooms')">Rooms</button>
-            <button onclick="setResortView('dining')">Dining</button>
-            <button onclick="setResortView('kids')">Kids Club</button>
-            <button onclick="setResortView('pools')">Pools</button>
-          </div>
-        </section>
-        <section class="card mapEmbedCard">
-          <div class="mapEmbedHead">
-            <div>
-              <h3>Resort Map</h3>
-              <p class="small">Garza Blanca Resort &amp; Spa Los Cabos, Tourist Corridor Km. 17.5.</p>
+      <div class="resortPanel resortOverviewPanel" id="resort-overview">
+        <div class="pageIntro">
+          <div class="featurePanel">
+            <p class="kpi">Garza Blanca Resort &amp; Spa Los Cabos</p>
+            <h2>Resort guide</h2>
+            <p>Dining defaults, pool plans, Kids Club details, rooms, weather, and map references are separated into quick focused views.</p>
+            <div class="sectionTools">
+              <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos">Official Site</a>
+              <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/all-inclusive">All-Inclusive</a>
+              <a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Dining</a>
             </div>
-            <a class="tag" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/?api=1&query=Garza%20Blanca%20Resort%20%26%20Spa%20Los%20Cabos">Open Map</a>
           </div>
-          <iframe class="mapEmbed" title="Garza Blanca Resort & Spa Los Cabos map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Garza%20Blanca%20Resort%20%26%20Spa%20Los%20Cabos&output=embed"></iframe>
-        </section>
-      </div>
+          <div class="quickGrid">
+            <div class="quickCard"><div class="kpi">Address</div><strong>Km. 17.5 Tourist Corridor</strong><div class="small">Cabo San Lucas, BCS 23405</div></div>
+            <div class="quickCard"><div class="kpi">Phone</div><strong>+52 624 105 4460</strong><div class="small">Toll Free: 1 800 931 6023</div></div>
+            <div class="quickCard"><div class="kpi">Kids Club</div><strong>9 AM-5 PM</strong><div class="small">Ages 4-12; confirm schedule onsite</div></div>
+            <div class="quickCard"><div class="kpi">Default Mode</div><strong>Pool-first</strong><div class="small">Beach available; pool is the kid-friendly base</div></div>
+          </div>
+        </div>
 
-      <div class="grid resortPanel resortOverviewPanel">
-        <section class="card span7">
-          <h3>Check-In Runbook</h3>
-          <div class="runbook">
-            <div class="runStep"><span class="pill info">Arrival</span><div><b>Confirm rooms and keys.</b><br><span class="small">Room numbers, proximity, elevator route, wristbands, and any sofa-bed setup.</span></div></div>
-            <div class="runStep"><span class="pill warn">Kids</span><div><b>Get Kids Club rules.</b><br><span class="small">Signup process, hours, age handling, pool-time rules, and babysitting options.</span></div></div>
-            <div class="runStep"><span class="pill ok">Meals</span><div><b>Set dining defaults.</b><br><span class="small">Reservation rules, kids menu, room service, breakfast base, and first dinner plan.</span></div></div>
-            <div class="runStep"><span class="pill neutral">Pool</span><div><b>Find the family base.</b><br><span class="small">Best kid pool, towels, shade, cabanas, stroller parking, and beach safety signal.</span></div></div>
-          </div>
-        </section>
-        <section class="card span5">
-          <h3>Arrival Intelligence</h3>
-          <div class="decisionMatrix compactDecisionStack">
-            <div class="decisionCard"><span class="pill info">Included</span><h4>All-inclusive signal</h4><p class="small">Meals, drinks, room service, Wi-Fi, concierge, taxes, and standard activities are covered. Premium items may still be add-ons.</p></div>
-            <div class="decisionCard"><span class="pill warn">Ask first</span><h4>Check-in questions</h4><p class="small">Rooms, proximity, keys, Kids Club signup, dining rules, towels, wristbands, cabanas, and best kid pool.</p></div>
-            <div class="decisionCard"><span class="pill ok">Default plan</span><h4>Low-friction choices</h4><p class="small">Breakfast at Blanca Blue, pool lunch, room service for tired kids, and pool base on the first full day.</p></div>
-          </div>
-        </section>
+        <div class="resortTileGrid">
+          <button class="resortTile" onclick="setResortView('dining')"><span class="pill info">Dining</span><strong>Meals + reservations</strong><span>Breakfast default, pool lunch, dinner fallback.</span></button>
+          <button class="resortTile" onclick="setResortView('pools')"><span class="pill ok">Pools</span><strong>Pool + beach base</strong><span>Pool system, daily tote, towel/cabana questions.</span></button>
+          <button class="resortTile" onclick="setResortView('kids')"><span class="pill warn">Kids</span><strong>Kids Club</strong><span>Hours, ages, activities, signup details.</span></button>
+          <button class="resortTile" onclick="setResortView('rooms')"><span class="pill neutral">Rooms</span><strong>Rooms + setup</strong><span>Sleeping setup, proximity, room logistics.</span></button>
+          <button class="resortTile" onclick="setResortView('weather')"><span class="pill info">Weather</span><strong>Sun + swim plan</strong><span>Compact forecast signal for pool days.</span></button>
+        </div>
+
+        <div class="grid">
+          <section class="card mapEmbedCard span7">
+            <div class="mapEmbedHead">
+              <div>
+                <h3>Resort Map</h3>
+                <p class="small">Garza Blanca Resort &amp; Spa Los Cabos, Tourist Corridor Km. 17.5.</p>
+              </div>
+              <a class="tag" target="_blank" rel="noreferrer" href="https://www.google.com/maps/search/?api=1&query=Garza%20Blanca%20Resort%20%26%20Spa%20Los%20Cabos">Open Map</a>
+            </div>
+            <iframe class="mapEmbed" title="Garza Blanca Resort & Spa Los Cabos map" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Garza%20Blanca%20Resort%20%26%20Spa%20Los%20Cabos&output=embed"></iframe>
+          </section>
+          <section class="card span5">
+            <h3>At a Glance</h3>
+            <div class="resortCompactList">
+              <div class="resortCompactItem"><span class="pill ok">Meals</span><div><b>All-inclusive signal</b><div class="small">Meals, drinks, room service, Wi-Fi, concierge, taxes, and standard activities are covered; premium add-ons may vary.</div></div></div>
+              <div class="resortCompactItem"><span class="pill info">Pools</span><div><b>Eight-pool system</b><div class="small">Kids pool, family pool, main pool, relaxing pool, panoramic and infinity options.</div></div></div>
+              <div class="resortCompactItem"><span class="pill warn">Arrival</span><div><b>Ask only what matters</b><div class="small">Rooms/proximity, Kids Club signup, dining reservation rules, towels, wristbands, cabanas.</div></div></div>
+            </div>
+          </section>
+        </div>
       </div>
 
       <div class="grid">
-        <div class="card span12 resortPanel resortWeatherPanel" id="resort-weather">
-          <h3>Weather</h3>
-          <div class="grid">
-            <div class="card compact span3"><span class="pill ok">Trip Signal</span><h4>Pool-first weather</h4><div class="small">Warm, dry, sun-heavy pattern.</div></div>
-            <div class="card compact span3"><span class="pill bad">UV Signal</span><h4>High sun exposure</h4><div class="small">Hats, rash guards, and sunscreen volume matter.</div></div>
-            <div class="card compact span3"><span class="pill info">Evenings</span><h4>Warm lows</h4><div class="small">Light layers only; no bulky jackets.</div></div>
-            <div class="card compact span3"><span class="pill warn">Beach</span><h4>Daily wind check</h4><div class="small">Pool remains the default operating base.</div></div>
+        <div class="card span12 resortPanel resortDiningPanel" id="resort-dining">
+          <div class="resortMiniHero">
+            <div><div class="kpi">Dining</div><h3>Meals + reservations</h3><p>Keep meals simple: breakfast default, pool lunch, easy dinner fallback.</p></div>
+            <div class="sectionTools"><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/restaurants">Official Dining</a></div>
           </div>
-          <div class="weatherGrid" id="weatherGrid" style="margin-top:12px"></div>
-          <p class="sourceNote">Forecast values are from the Cabo resort hub snapshot dated June 18, 2026. Refresh again inside the final week before travel and on beach days.</p>
-        </div>
-
-        <div class="card span7 resortPanel resortDiningPanel" id="resort-dining">
-          <h3>Dining Board</h3>
-          <div class="decisionMatrix" style="margin-bottom:12px">
-            <div class="decisionCard"><span class="pill ok">Default</span><h4>Breakfast</h4><p class="small">Blanca Blue. Simple start, consistent family default.</p></div>
-            <div class="decisionCard"><span class="pill info">Pool day</span><h4>Lunch</h4><p class="small">Food Truck / pool food. Keep kids in the swim rhythm.</p></div>
-            <div class="decisionCard"><span class="pill warn">Low battery</span><h4>Dinner</h4><p class="small">Room service or NOI Terrazza Italiana if everyone can rally.</p></div>
+          <div class="resortFocusGrid" style="margin-bottom:10px">
+            <div class="resortFocusCard"><span class="pill ok">Default</span><h4>Breakfast</h4><p class="small">Blanca Blue. Simple start, consistent family default.</p></div>
+            <div class="resortFocusCard"><span class="pill info">Pool day</span><h4>Lunch</h4><p class="small">Food Truck / pool food. Keep kids in the swim rhythm.</p></div>
+            <div class="resortFocusCard"><span class="pill warn">Low battery</span><h4>Dinner</h4><p class="small">Room service or NOI Terrazza Italiana if everyone can rally.</p></div>
+            <div class="resortFocusCard"><span class="pill neutral">Ask</span><h4>Reservations</h4><p class="small">Confirm restaurant reservation rules and kids menu availability onsite.</p></div>
           </div>
           <div id="foodDash"></div>
-          <p class="sourceNote">Dining rows combine the trip planning file with official resort dining links. Verify hours and reservation rules onsite because resort schedules can shift.</p>
-        </div>
-        <div class="card span5 resortPanel resortKidsPanel" id="resort-kids">
-          <h3>Kids Club + Activities</h3>
-          <table>
-            <tr><th>Feature</th><th>Details</th></tr>
-            <tr><td>Hours</td><td>9:00 AM - 5:00 PM</td></tr>
-            <tr><td>Ages</td><td>4-12</td></tr>
-            <tr><td>Supervision</td><td>Certified bilingual staff / babysitters listed by resort.</td></tr>
-            <tr><td>Activities</td><td>Crafts, games, pool time, beach soccer, scavenger hunts, workshops, movies, video games, reading club.</td></tr>
-            <tr><td>Under 4 / outside hours</td><td>Paid babysitting listed by resort; confirm onsite.</td></tr>
-          </table>
-          <div class="sectionTools"><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/kids-club">Open Kids Club</a><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Open Activities</a></div>
+          <p class="sourceNote">Verify dining hours and reservation rules onsite because resort schedules can shift.</p>
         </div>
 
-        <div class="card span6 resortPanel resortPoolsPanel" id="resort-pools">
-          <h3>Pools + Beach</h3>
-          <table>
-            <tr><th>Area</th><th>What to know</th></tr>
-            <tr><td>Pool System</td><td>Resort map references 8 outdoor pools.</td></tr>
-            <tr><td>Kids Pool</td><td>#2 near central pool zone.</td></tr>
-            <tr><td>Family Pool</td><td>#6 on resort map.</td></tr>
-            <tr><td>Main Pool</td><td>#4 on resort map.</td></tr>
-            <tr><td>Relaxing Pool</td><td>#3 on resort map.</td></tr>
-            <tr><td>Panoramic / Infinity</td><td>#7 and #8 on resort map.</td></tr>
-            <tr><td>Beachfront</td><td>Beach available; surf can be real, so pool is the default with kids.</td></tr>
-          </table>
+        <div class="card span12 resortPanel resortPoolsPanel" id="resort-pools">
+          <div class="resortMiniHero">
+            <div><div class="kpi">Pools + Beach</div><h3>Pool-first operating base</h3><p>Use the pool system as the family default; check beach conditions daily.</p></div>
+          </div>
+          <div class="grid">
+            <div class="card compact span7">
+              <h3>Pool System</h3>
+              <table>
+                <tr><th>Area</th><th>What to know</th></tr>
+                <tr><td>Pool System</td><td>Resort map references 8 outdoor pools.</td></tr>
+                <tr><td>Kids Pool</td><td>#2 near central pool zone.</td></tr>
+                <tr><td>Family Pool</td><td>#6 on resort map.</td></tr>
+                <tr><td>Main Pool</td><td>#4 on resort map.</td></tr>
+                <tr><td>Relaxing Pool</td><td>#3 on resort map.</td></tr>
+                <tr><td>Panoramic / Infinity</td><td>#7 and #8 on resort map.</td></tr>
+                <tr><td>Beachfront</td><td>Beach available; surf can be real, so pool is the default with kids.</td></tr>
+              </table>
+            </div>
+            <div class="card compact span5">
+              <h3>Daily Pool Tote</h3>
+              <table><tr><th>Item</th><th>Qty</th><th>Packed</th></tr><tbody id="poolToteRows"></tbody></table>
+            </div>
+          </div>
         </div>
-        <div class="card span6 resortPanel resortPoolsPanel">
-          <h3>Daily Pool Tote</h3>
-          <table><tr><th>Item</th><th>Qty</th><th>Packed</th></tr><tbody id="poolToteRows"></tbody></table>
+
+        <div class="card span12 resortPanel resortKidsPanel" id="resort-kids">
+          <div class="resortMiniHero">
+            <div><div class="kpi">Kids Club</div><h3>Kids Club + activities</h3><p>Hours, ages, activity fit, and babysitting backup in one place.</p></div>
+            <div class="sectionTools"><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/kids-club">Kids Club</a><a class="tag" target="_blank" rel="noreferrer" href="https://www.garzablancaresort.com/los-cabos/resort/activities">Activities</a></div>
+          </div>
+          <div class="grid">
+            <div class="card compact span6">
+              <h3>Operating Details</h3>
+              <table>
+                <tr><th>Feature</th><th>Details</th></tr>
+                <tr><td>Hours</td><td>9:00 AM - 5:00 PM</td></tr>
+                <tr><td>Ages</td><td>4-12</td></tr>
+                <tr><td>Supervision</td><td>Certified bilingual staff / babysitters listed by resort.</td></tr>
+                <tr><td>Activities</td><td>Crafts, games, pool time, beach soccer, scavenger hunts, workshops, movies, video games, reading club.</td></tr>
+                <tr><td>Under 4 / outside hours</td><td>Paid babysitting listed by resort; confirm onsite.</td></tr>
+              </table>
+            </div>
+            <div class="card compact span6">
+              <h3>Ask Onsite</h3>
+              <div class="resortCompactList">
+                <div class="resortCompactItem"><span class="pill info">Signup</span><div>Current activity schedule and how far in advance to reserve.</div></div>
+                <div class="resortCompactItem"><span class="pill warn">Ages</span><div>How they handle age edges, pool time, and sibling grouping.</div></div>
+                <div class="resortCompactItem"><span class="pill ok">Backup</span><div>Babysitting availability for younger kids or evening support.</div></div>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div class="card span12 resortPanel resortRoomsPanel" id="resort-rooms">
-          <h3>Rooms + Setup</h3>
+          <div class="resortMiniHero">
+            <div><div class="kpi">Rooms</div><h3>Rooms + setup</h3><p>Sleeping setup, proximity, and room logistics without mixing in resort-wide decisions.</p></div>
+          </div>
           <table>
             <tr><th>Travelers</th><th>Working room type</th><th>Setup notes</th></tr>
             <tr><td>Ron + Paula</td><td>King + Sofa Bed</td><td>Room number unknown until check-in.</td></tr>
@@ -1832,8 +1904,24 @@
           <p class="sourceNote">Known: no connecting rooms. Resort will try proximity. Room numbers and proximity are check-in issues.</p>
         </div>
 
+        <div class="card span12 resortPanel resortWeatherPanel" id="resort-weather">
+          <div class="resortMiniHero">
+            <div><div class="kpi">Weather</div><h3>Sun + swim plan</h3><p>Compact forecast signal for pool days, UV, beach checks, and evening layers.</p></div>
+          </div>
+          <div class="resortFacts">
+            <div class="resortFact"><span class="pill ok">Trip Signal</span><strong>Pool-first weather</strong><div class="small">Warm, dry, sun-heavy pattern.</div></div>
+            <div class="resortFact"><span class="pill bad">UV Signal</span><strong>High sun exposure</strong><div class="small">Hats, rash guards, sunscreen volume.</div></div>
+            <div class="resortFact"><span class="pill info">Evenings</span><strong>Warm lows</strong><div class="small">Light layers only.</div></div>
+            <div class="resortFact"><span class="pill warn">Beach</span><strong>Daily wind check</strong><div class="small">Pool remains default base.</div></div>
+          </div>
+          <div class="weatherGrid" id="weatherGrid" style="margin-top:12px"></div>
+          <p class="sourceNote">Forecast values are from the Cabo resort hub snapshot dated June 18, 2026. Refresh again inside the final week before travel and on beach days.</p>
+        </div>
+
         <div class="card span12 resortPanel resortNotesPanel" id="resort-notes">
-          <h3>Onsite Planning Notes</h3>
+          <div class="resortMiniHero">
+            <div><div class="kpi">Notes</div><h3>Onsite planning notes</h3><p>Small editable list for resort questions, day-of notes, and follow-ups.</p></div>
+          </div>
           <table><tr><th>Day</th><th>Plan / Note</th><th>Owner</th><th>Done</th><th></th></tr><tbody id="onsiteRows"></tbody></table>
           <div class="sectionTools"><button onclick="addOnsiteNote()">Add onsite note</button></div>
         </div>
