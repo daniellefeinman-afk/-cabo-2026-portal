@@ -258,6 +258,34 @@
       border-color: var(--coral);
       background: #ee6258;
     }
+    .syncStatus {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 31px;
+      padding: 5px 10px;
+      border: 1px solid rgba(10, 147, 150, 0.24);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      color: var(--navy);
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+    .syncStatus::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--teal);
+      box-shadow: 0 0 0 3px rgba(10, 147, 150, 0.12);
+    }
+    .syncStatus.syncing::before { background: var(--gold); box-shadow: 0 0 0 3px rgba(238, 155, 0, 0.16); }
+    .syncStatus.offline::before,
+    .syncStatus.error::before { background: var(--coral); box-shadow: 0 0 0 3px rgba(214, 90, 66, 0.16); }
+    :root[data-theme="dark"] .syncStatus {
+      background: rgba(17, 29, 43, 0.72);
+    }
     .headerMenu {
       position: relative;
       display: inline-flex;
@@ -1335,6 +1363,7 @@
             <div class="menuLabel">Portal</div>
             <button onclick="showPage('sources')">Sources + live links</button>
             <button onclick="saveAll()">Save changes</button>
+            <button onclick="syncNow()">Sync now</button>
             <button onclick="exportData()">Export data</button>
             <button onclick="document.getElementById('importFile').click()">Import data</button>
             <button onclick="window.print()">Print portal</button>
@@ -1352,6 +1381,7 @@
           </div>
         </details>
         <input id="importFile" type="file" accept="application/json" hidden onchange="importData(event)">
+        <span class="syncStatus syncing" id="syncStatus" title="Cloud save status">Connecting</span>
         <button class="openItemsButton" onclick="openAction('shopping-open')">Open Items</button>
       </div>
     </div>
@@ -1842,12 +1872,21 @@
     const STORAGE_KEY = "caboPortal_v3";
     const OLD_KEYS = ["caboPortal_v2", "caboPortal_v1"];
     const THEME_KEY = "caboPortal_theme";
+    const SUPABASE_URL = "https://oxtgkfbptrephreewbbe.supabase.co";
+    const SUPABASE_KEY = "sb_publishable_Q2_4O7V3NlVQCQgVmQLP9g_FKRIydL8";
+    const CLOUD_STATE_ID = "cabo-2026";
+    const CLOUD_STATE_ENDPOINT = `${SUPABASE_URL}/rest/v1/trip_state`;
     let activeTripDay = "outbound";
     let activeFlight = "outbound";
     let packingMode = "packing";
     let activePackingFilter = "all";
     let shoppingFilter = "open";
     let shoppingSort = { field: "status", dir: "asc" };
+    let cloudUpdatedAt = null;
+    let cloudSaveTimer = null;
+    let cloudSaveInFlight = false;
+    let cloudSaveQueued = false;
+    let cloudPollTimer = null;
 
     const defaults = {
       checks: {},
@@ -1937,6 +1976,134 @@
       try { return merge(clone(defaults), JSON.parse(raw)); }
       catch { return clone(defaults); }
     }
+    function localSaveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+    function cloudHeaders(extra = {}) {
+      return {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+        ...extra
+      };
+    }
+    function getDeviceLabel() {
+      const key = "caboPortal_device";
+      let label = localStorage.getItem(key);
+      if (!label) {
+        label = "device-" + Math.random().toString(36).slice(2, 8);
+        localStorage.setItem(key, label);
+      }
+      return label;
+    }
+    function setSyncStatus(mode, text, title = "") {
+      const el = document.getElementById("syncStatus");
+      if (!el) return;
+      el.className = `syncStatus ${mode}`;
+      el.textContent = text;
+      el.title = title || text;
+    }
+    function formatSyncTime(value = new Date()) {
+      return value.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    }
+    function cloudDataIsEmpty(value) {
+      return !value || (typeof value === "object" && !Array.isArray(value) && Object.keys(value).length === 0);
+    }
+    async function fetchCloudRecord() {
+      const url = `${CLOUD_STATE_ENDPOINT}?id=eq.${encodeURIComponent(CLOUD_STATE_ID)}&select=data,updated_at,updated_by`;
+      const response = await fetch(url, { headers: cloudHeaders({ Accept: "application/json" }) });
+      if (!response.ok) throw new Error(`Cloud read failed: ${response.status}`);
+      const rows = await response.json();
+      return rows[0] || null;
+    }
+    async function pushCloudState(reason = "auto") {
+      if (cloudSaveInFlight) {
+        cloudSaveQueued = true;
+        return;
+      }
+      cloudSaveInFlight = true;
+      setSyncStatus("syncing", "Syncing", "Saving latest portal data to Supabase.");
+      try {
+        const updatedAt = new Date().toISOString();
+        const response = await fetch(`${CLOUD_STATE_ENDPOINT}?on_conflict=id`, {
+          method: "POST",
+          headers: cloudHeaders({
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Prefer: "resolution=merge-duplicates,return=representation"
+          }),
+          body: JSON.stringify({
+            id: CLOUD_STATE_ID,
+            data: clone(data),
+            updated_at: updatedAt,
+            updated_by: `${getDeviceLabel()}:${reason}`
+          })
+        });
+        if (!response.ok) throw new Error(`Cloud save failed: ${response.status}`);
+        const rows = await response.json();
+        cloudUpdatedAt = rows[0]?.updated_at || updatedAt;
+        setSyncStatus("saved", `Saved ${formatSyncTime(new Date(cloudUpdatedAt))}`, "Saved to Supabase and backed up locally.");
+      } catch (error) {
+        setSyncStatus("offline", "Offline backup", "Saved on this device. Cloud sync will retry.");
+        console.warn(error);
+      } finally {
+        cloudSaveInFlight = false;
+        if (cloudSaveQueued) {
+          cloudSaveQueued = false;
+          queueCloudSave(true, "queued");
+        }
+      }
+    }
+    function queueCloudSave(immediate = false, reason = "auto") {
+      clearTimeout(cloudSaveTimer);
+      cloudSaveTimer = setTimeout(() => {
+        cloudSaveTimer = null;
+        pushCloudState(reason);
+      }, immediate ? 0 : 900);
+    }
+    async function initializeCloudSync() {
+      setSyncStatus("syncing", "Connecting", "Loading shared trip data from Supabase.");
+      try {
+        const record = await fetchCloudRecord();
+        if (record && !cloudDataIsEmpty(record.data)) {
+          data = merge(clone(defaults), record.data);
+          cloudUpdatedAt = record.updated_at;
+          localSaveData();
+          renderAll();
+          setSyncStatus("saved", `Loaded ${formatSyncTime(new Date(record.updated_at))}`, "Loaded shared trip data from Supabase.");
+        } else {
+          await pushCloudState("initial");
+        }
+        startCloudPolling();
+      } catch (error) {
+        setSyncStatus("offline", "Offline backup", "Cloud sync is not connected. Local backup is still active.");
+        console.warn(error);
+      }
+    }
+    async function refreshCloudState(force = false) {
+      if (!force && (cloudSaveTimer || cloudSaveInFlight || ["INPUT", "TEXTAREA", "SELECT"].includes(document.activeElement?.tagName))) return;
+      try {
+        const record = await fetchCloudRecord();
+        if (!record || cloudDataIsEmpty(record.data) || record.updated_at === cloudUpdatedAt) return;
+        data = merge(clone(defaults), record.data);
+        cloudUpdatedAt = record.updated_at;
+        localSaveData();
+        renderAll();
+        setSyncStatus("saved", `Updated ${formatSyncTime(new Date(record.updated_at))}`, "Pulled the latest shared trip data from Supabase.");
+      } catch (error) {
+        setSyncStatus("offline", "Offline backup", "Could not refresh cloud data. Local backup is still active.");
+        console.warn(error);
+      }
+    }
+    function startCloudPolling() {
+      clearInterval(cloudPollTimer);
+      cloudPollTimer = setInterval(() => refreshCloudState(false), 30000);
+    }
+    function syncNow() {
+      collectAll();
+      localSaveData();
+      queueCloudSave(true, "manual");
+      document.querySelectorAll(".headerMenu").forEach(menu => menu.open = false);
+    }
     function clone(value) { return JSON.parse(JSON.stringify(value)); }
     function merge(base, incoming) {
       if (Array.isArray(base)) return Array.isArray(incoming) && incoming.length ? incoming : base;
@@ -1976,8 +2143,9 @@
     }
     function saveAll() {
       collectAll();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      localSaveData();
       renderAll();
+      queueCloudSave(true, "save-button");
     }
     function collectAll() {
       document.querySelectorAll("[data-k]").forEach(i => data.checks[i.dataset.k] = i.checked);
@@ -2004,8 +2172,9 @@
     }
     function autoSave() {
       collectAll();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      localSaveData();
       updateMetrics();
+      queueCloudSave(false, "autosave");
     }
     function bindAutosave() {
       document.querySelectorAll("input, select, textarea").forEach(el => {
@@ -2516,6 +2685,8 @@
     }
 
     renderAll();
+    initializeCloudSync();
+    window.addEventListener("focus", () => refreshCloudState(false));
     portalSearch?.addEventListener("input", event => searchPortal(event.target.value));
     document.querySelectorAll(".headerMenu").forEach(menu => {
       menu.addEventListener("toggle", () => {
